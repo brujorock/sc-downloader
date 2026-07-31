@@ -1,11 +1,4 @@
-<p align="center">
-	<img src="Src/Assets/min_logo.png" style="max-width: 55%;" alt="video working" />
-</p>
-
 ## Streaming community downloader
-<p align="center">
-	<img src="Src/Assets/run.gif" style="max-width: 55%;" alt="video working" />
-</p>
 
 ## Overview.
 This repository provide a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
