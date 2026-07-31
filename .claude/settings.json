@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-Command ffmpeg -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command ffprobe -ErrorAction SilentlyContinue)",
+      "Bash(where ffmpeg *)",
+      "Bash(where ffprobe *)",
+      "Bash(where python *)",
+      "Bash(where winget *)",
+      "Bash(where choco *)",
+      "Bash(where scoop *)",
+      "Bash(choco list *)",
+      "Bash(ffmpeg -version)",
+      "Bash(git config *)",
+      "Bash(git ls-remote *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git branch *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(gh auth *)",
+      "Bash(gh api *)",
+      "PowerShell(gh auth status 2>&1)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:vscodethemes.com)",
+      "WebFetch(domain:marketplace.visualstudio.com)"
+    ]
+  }
+}

@@ -13,23 +13,29 @@ from Src.Lib.FFmpeg.installer import check_ffmpeg
 # Import
 import sys
 
-# [ main ]
-def initialize():
+try:
+    import msvcrt
+except ImportError:
+    msvcrt = None
 
-    if sys.version_info < (3, 11):
-        console.print("[error]Installa una versione di Python > 3.11[/]")
-        sys.exit(0)
+# [ util ]
+def press_any_key(text="[muted]Premi un tasto qualsiasi per tornare al menu principale...[/]"):
+    console.print(text)
+    if msvcrt:
+        msvcrt.getch()
+    else:
+        input()
 
-    remove_folder("tmp")
-    msg_start()
+# [ menu actions ]
+def download_flow():
+
+    console.print("[title]Inizializzazione:[/]")
     check_ffmpeg()
+    domain, site_version = Page.load_domain()
     console.print()
 
-def main():
-
-    initialize()
-    domain, site_version = Page.domain_version()
-    console.print()
+    if not domain:
+        return
 
     console.rule("[title]Ricerca[/]", style="muted")
     film_search = msg.ask("[prompt]Inserisci una parola da cercare nel sito[/]").strip()
@@ -64,6 +70,66 @@ def main():
 
     console.print()
     console.print("[success]Completato.[/]")
+
+def settings_flow():
+    console.rule("[title]Impostazioni[/]", style="muted")
+    Page.configure_domain()
+    console.print()
+    press_any_key()
+
+def about_flow():
+    console.rule("[title]About SCD[/]", style="muted")
+    console.print(
+        "[info]Streaming Community Downloader e' stato creato da[/] [value]BarbieGirl♥[/] [info]nel 2026, "
+        "per puro scopo didattico.[/]"
+    )
+    console.print("[info]Non ha fini di lucro e puo' essere scaricato, modificato e utilizzato da chiunque.[/]")
+    console.print(
+        "[warning]Chi lo utilizza per scaricare materiale protetto da copyright o comunque illegale "
+        "se ne assume la piena responsabilita'.[/]"
+    )
+    console.print()
+    press_any_key()
+
+# [ menu ]
+def show_menu():
+    console.print("[title]Menu:[/]")
+    console.print("[accent]1[/] [value]Scarica film o serie TV[/]")
+    console.print("[accent]2[/] [value]Impostazioni[/]")
+    console.print("[accent]3[/] [value]About SCD[/]")
+
+MENU_ACTIONS = {
+    "1": download_flow,
+    "2": settings_flow,
+    "3": about_flow,
+}
+
+# [ main ]
+def main():
+
+    if sys.version_info < (3, 11):
+        console.print("[error]Installa una versione di Python > 3.11[/]")
+        sys.exit(0)
+
+    remove_folder("tmp")
+    msg_start()
+
+    while True:
+        show_menu()
+        choice = msg.ask("[prompt]Seleziona un'opzione[/]").strip()
+        console.print()
+
+        action = MENU_ACTIONS.get(choice)
+        if action is None:
+            console.print("[error]Opzione non valida.[/]")
+            console.print()
+            continue
+
+        action()
+
+        console.print()
+        console.rule(style="muted")
+        console.print()
 
 if __name__ == '__main__':
     main()

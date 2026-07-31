@@ -43,7 +43,9 @@ def ask_new_domain():
         else:
             console.print("[error]Il dominio inserito non risponde, non esiste o non e' scritto bene. Reinseriscilo.[/]")
 
-def domain_version():
+def load_domain():
+    """Read-only: load the saved domain and verify it still works. Does not prompt or save. Used by the download flow."""
+
     console.print("[info]Recupero regole in corso...[/]")
 
     try:
@@ -54,23 +56,43 @@ def domain_version():
 
     saved_domain = req_repo.get('domain')
 
-    if saved_domain:
-        console.print(f"[info]Test dominio salvato:[/] [value]{saved_domain}[/]")
-        version = test_domain(saved_domain)
+    if not saved_domain:
+        console.print("[error]Nessun dominio configurato. Vai su[/] [value]Impostazioni[/] [error]per configurarlo.[/]")
+        return None, None
 
-        if version:
-            console.print(f"[success]Il dominio salvato e' funzionante:[/] [value]{saved_domain}[/]")
-            if Confirm.ask("[prompt]Vuoi tenerlo?[/]", default=True, console=console):
-                return saved_domain, version
-        else:
-            console.print(f"[error]Il dominio salvato[/] [value]{saved_domain}[/] [error]non risponde piu'.[/]")
+    console.print(f"[info]Test dominio:[/] [value]{saved_domain}[/]")
+    version = test_domain(saved_domain)
+
+    if version:
+        console.print(f"[success]Dominio funzionante:[/] [value]{saved_domain}[/]")
+        return saved_domain, version
+
+    console.print(f"[error]Il dominio salvato[/] [value]{saved_domain}[/] [error]non risponde piu'. Vai su[/] [value]Impostazioni[/] [error]per aggiornarlo.[/]")
+    return None, None
+
+def configure_domain():
+    """Interactive: show the saved domain (if any) and let the user set or change it, then save it. Used by the settings menu."""
+
+    try:
+        with open('data.json', 'r') as file:
+            req_repo = json.load(file)
+    except FileNotFoundError:
+        req_repo = {"domain": ""}
+
+    current_domain = req_repo.get('domain')
+
+    if current_domain:
+        console.print(f"[info]Dominio attualmente salvato:[/] [value]{current_domain}[/]")
+        if not Confirm.ask("[prompt]Vuoi cambiarlo?[/]", default=False, console=console):
+            console.print(f"[success]Dominio confermato:[/] [value]{current_domain}[/]")
+            return
 
     domain, version = ask_new_domain()
     req_repo['domain'] = domain
     with open('data.json', 'w') as file:
         json.dump(req_repo, file)
 
-    return domain, version
+    console.print(f"[success]Dominio salvato:[/] [value]{domain}[/]")
 
 def search(title_search, domain):
 

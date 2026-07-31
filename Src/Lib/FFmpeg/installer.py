@@ -45,12 +45,13 @@ def download_ffmpeg():
 
 def check_ffmpeg():
 
-    console.print("[info]Verifica di ffmpeg in corso...[/]")
+    console.print("[info]Verifica di ffmpeg in corso...[/]", end="")
 
     try:
         subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        console.print("[success]FFmpeg trovato.[/]")
+        console.print(" [success]✓ Trovato[/]")
     except:
+        console.print()
         try:
             console.print("[warning]FFmpeg non e' nel PATH. Download e aggiunta al PATH in corso...[/]")
 

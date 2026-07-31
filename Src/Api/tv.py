@@ -143,12 +143,12 @@ def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_sel
 
     mp4_name = f"{tv_name.replace('+', '_')}_S{str(season_select).zfill(2)}E{str(index_ep_select+1).zfill(2)}"
     mp4_format = f"{mp4_name}.mp4"
-    mp4_path = os.path.join("videos",tv_name, mp4_format)
+    mp4_path = os.path.join("downloads", "tv", tv_name, mp4_format)
 
     if m3u8_url_audio != None:
         console.print("[info]Uso traccia audio m3u8:[/] [success]si[/]")
 
-    download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path)
+    download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path, subtitle_prefix=mp4_name)
 
 def main_dw_tv(tv_id, tv_name, version, domain):
 

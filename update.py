@@ -92,11 +92,11 @@ def download_and_extract_latest_commit(author, repo_name):
 
 def main_upload():
 
-    repository_owner = 'Ghost6446'
-    repository_name = 'StreamingCommunity_api'
+    repository_owner = 'brujorock'
+    repository_name = 'sc-downloader'
 
     # Remove all old file
-    keep_specific_items(".", "videos", "upload.py")
+    keep_specific_items(".", "downloads", "upload.py")
 
     download_and_extract_latest_commit(repository_owner, repository_name)
 

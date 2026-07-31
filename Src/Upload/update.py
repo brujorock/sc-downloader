@@ -7,8 +7,8 @@ from Src.Util.console import console
 import os, requests, time
 
 # Variable
-repo_name = "StreamingCommunity_api"
-repo_user = "ghost6446"
+repo_name = "sc-downloader"
+repo_user = "brujorock"
 main = os.path.abspath(os.path.dirname(__file__))
 base = "\\".join(main.split("\\")[:-1])
 

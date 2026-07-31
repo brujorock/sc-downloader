@@ -23,6 +23,7 @@ MAX_WORKER = 16
 RETRY_MAX_WORKER = 6
 DONWLOAD_SUB = True
 DOWNLOAD_DEFAULT_LANGUAGE = False
+SUBTITLE_LANGUAGES = ["ita", "eng", "spa"]
 
 
 # [ main class ]
@@ -110,19 +111,17 @@ class M3U8_Parser:
             print("Nessuna playlist video trovata")
             return None
         
-    def download_subtitle(self):
-        """Download all subtitle if present"""
-
-        path = os.path.join("videos", "subtitle")
+    def download_subtitle(self, subtitle_dir, filename_prefix=""):
+        """Download all subtitle if present, saving them next to the video (in a 'subtitle' subfolder)"""
 
         if self.subtitle_playlist:
             for sub_info in self.subtitle_playlist:
                 name_language = sub_info.get("language")
 
-                if name_language in ["auto", "ita"]:
+                if name_language not in SUBTITLE_LANGUAGES:
                     continue
 
-                os.makedirs(path, exist_ok=True)
+                os.makedirs(subtitle_dir, exist_ok=True)
                 console.log(f"[info]Download sottotitolo:[/] [value]{name_language}[/]")
                 req_sub_content = requests.get(sub_info.get("uri"))
 
@@ -130,7 +129,11 @@ class M3U8_Parser:
                 sub_parse.parse_data(req_sub_content.text)
                 url_subititle = sub_parse.subtitle[0]
 
-                open(os.path.join(path, name_language + ".vtt"), "wb").write(requests.get(url_subititle).content)
+                # A film folder holds a single video, so "ita.vtt" is unambiguous. A TV
+                # show folder holds every episode's subtitles though, so those need the
+                # episode name as a prefix to avoid different episodes overwriting each other.
+                sub_filename = f"{filename_prefix}.{name_language}.vtt" if filename_prefix else f"{name_language}.vtt"
+                open(os.path.join(subtitle_dir, sub_filename), "wb").write(requests.get(url_subititle).content)
 
         else:
             console.log("[warning]Nessun sottotitolo trovato[/]")
@@ -443,16 +446,21 @@ def df_make_req(url):
 def download_subtitle(url, name_language):
     """Make req to vtt url and save to video subtitle folder"""
 
-    path = os.path.join("videos", "subtitle")
+    path = os.path.join("downloads", "subtitle")
     os.makedirs(path, exist_ok=True)
 
     console.log(f"[info]Download sottotitolo:[/] [value]{name_language}[/]")
     open(os.path.join(path, name_language + ".vtt"), "wb").write(requests.get(url).content)
 
-def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_subtitle=None, key=None,  output_filename=os.path.join("videos", "output.mp4"), log=False):
+def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_subtitle=None, key=None,  output_filename=os.path.join("downloads", "output.mp4"), subtitle_prefix="", log=False):
 
     # Get byte of key
     key = bytes.fromhex(key) if key is not None else key
+
+    # Video, audio and subtitles all live together next to the final mp4
+    output_dir = os.path.dirname(output_filename)
+    os.makedirs(output_dir, exist_ok=True)
+    subtitle_dir = os.path.join(output_dir, "subtitle")
 
     if m3u8_playlist != None:
         console.log("[info]Download m3u8 dalla playlist[/]")
@@ -484,8 +492,8 @@ def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_s
 
 
         # Download subtitle if present ( normaly in m3u8 playlist )
-        if DONWLOAD_SUB: 
-            parse_class_m3u8.download_subtitle()
+        if DONWLOAD_SUB:
+            parse_class_m3u8.download_subtitle(subtitle_dir, subtitle_prefix)
 
     if m3u8_subtitle != None:
 
@@ -498,13 +506,10 @@ def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_s
             parse_class_m3u8_sub.parse_data(m3u8_subtitle)
 
         # Download subtitle if present ( normaly in m3u8 playlist )
-        if DONWLOAD_SUB: 
-            parse_class_m3u8_sub.download_subtitle()
+        if DONWLOAD_SUB:
+            parse_class_m3u8_sub.download_subtitle(subtitle_dir, subtitle_prefix)
 
 
     # Download m3u8 index, with segments
-    # os.makedirs("videos", exist_ok=True)
-    path = output_filename.split("\\")
-    os.makedirs("\\".join(path[:-1]), exist_ok=True)
     if log: console.log(f"[info]Download m3u8 dall'indice:[/] [value]{m3u8_index}[/]")
     M3U8_Downloader(m3u8_index, m3u8_audio, key=key, output_filename=output_filename).start()

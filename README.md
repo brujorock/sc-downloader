@@ -1,7 +1,9 @@
-## Streaming community downloader
+## SCDownloader by BarbieGirl♥
 
 ## Overview.
 This repository provide a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
+
+This is a fork of the original [Streaming Community downloader](https://github.com/Ghost6446/StreamingCommunity_api), rewritten with an interactive menu and a Barbie-themed CLI.
 
 ## Requirement
 Make sure you have the following prerequisites installed on your system:
@@ -16,10 +18,16 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Run the script with the following command:
+Double-click `SCDownloader.bat` (Windows) to launch the app — it runs the venv's Python automatically, no manual activation needed.
+
+Or run it manually with the venv activated:
 ```python
 python run.py
 ```
+You'll get an interactive menu:
+1. **Scarica film o serie TV** — search and download (requires a domain to be configured first, see option 2).
+2. **Impostazioni** — set or change the streaming domain used to search/download. Required before your first download.
+3. **About SCD** — info about the project.
 
 ## Auto Update
 Keep your script up to date with the latest features by running:
@@ -32,12 +40,14 @@ python update.py
 
 - Download Specific Episodes or Entire Series: Seamlessly retrieve specific episodes or entire series using intuitive commands. Specify a range of episodes with square brackets notation, e.g., [5-7], or download all episodes with an asterisk (*).
 
-- Download Subtitles: Automatically fetch subtitles if available for downloaded content. (Note: To disable this feature, navigate to ".\Src\Lib\FFmpeg\my_m3u8" and change 'DOWNLOAD_SUB' to False in the configuration file.)
-
 - Sync Audio and Video: Ensure perfect synchronization between audio and video during the download process for an enhanced viewing experience.
 
-## Tutorial
-For a detailed walkthrough, refer to the [video tutorial](https://www.youtube.com/watch?v=Ok7hQCgxqLg&ab_channel=Nothing)
+- Subtitles: automatically downloads Italian, English and Spanish subtitles (when available), skipping every other language.
+
+- Output layout: films go to `downloads/film/[nome film]/`, with subtitles in a `subtitle/` subfolder next to the video. TV episodes go to `downloads/tv/[nome serie]/`.
+
+## Disclaimer
+This project is for educational purposes only. Anyone downloading copyrighted or otherwise illegal content through it is solely responsible for their own actions.
 
 ## Authors
-- [@Ghost6446](https://www.github.com/Ghost6446)
+- [@brujorock](https://github.com/brujorock)

@@ -11,7 +11,10 @@ __pycache__/
 *.pyc
 
 # Project specific
-videos/
+downloads/
 tmp/
 debug.log
 data.json
+
+# Claude Code local overrides (machine-specific, not shared)
+.claude/settings.local.json
