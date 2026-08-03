@@ -15,6 +15,7 @@ downloads/
 tmp/
 debug.log
 data.json
+history.json
 
 # Claude Code local overrides (machine-specific, not shared)
 .claude/settings.local.json

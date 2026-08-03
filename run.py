@@ -8,10 +8,12 @@ from Src.Util.console import console, msg
 from Src.Util.os import remove_folder
 from Src.Util.selection import ask_selection
 from Src.Util.i18n import t, load_language, set_language, get_language, SUPPORTED_LANGUAGES, LANGUAGE_NAMES
+from Src.Util.history import add_search, add_download, get_recent_searches, get_recent_downloads
 from Src.Lib.FFmpeg.installer import check_ffmpeg
 
 # Import
 import sys
+from rich.table import Table
 
 try:
     import msvcrt
@@ -45,6 +47,7 @@ def download_flow():
         if film_search in ("", "0"):
             return
 
+        add_search(film_search)
         db_title = Page.search(film_search, domain)
         console.print()
 
@@ -73,9 +76,12 @@ def download_flow():
             if selected_title['type'] == "movie":
                 console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
                 download_film(selected_title['id'], selected_title['slug'], domain)
+                add_download(selected_title['name'])
             else:
                 console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
-                download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
+                completed = download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
+                if completed:
+                    add_download(selected_title['name'])
 
         console.print()
         console.print(f"[success]{t('download.completed')}[/]")
@@ -131,17 +137,50 @@ def about_flow():
     console.print()
     press_any_key()
 
+def history_flow():
+    console.rule(f"[title]{t('history.title')}[/]", style="muted")
+
+    console.print(f"[title]{t('history.searches_title')}[/]")
+    searches = get_recent_searches()
+    if not searches:
+        console.print(f"[muted]{t('history.empty')}[/]")
+    else:
+        table = Table(show_header=True, header_style="title", border_style="muted")
+        table.add_column(t("table.when.col"), style="muted")
+        table.add_column(t("table.query.col"), style="value")
+        for entry in searches:
+            table.add_row(entry["timestamp"], entry["text"])
+        console.print(table)
+
+    console.print()
+    console.print(f"[title]{t('history.downloads_title')}[/]")
+    downloads = get_recent_downloads()
+    if not downloads:
+        console.print(f"[muted]{t('history.empty')}[/]")
+    else:
+        table = Table(show_header=True, header_style="title", border_style="muted")
+        table.add_column(t("table.when.col"), style="muted")
+        table.add_column(t("table.title.col"), style="value")
+        for entry in downloads:
+            table.add_row(entry["timestamp"], entry["text"])
+        console.print(table)
+
+    console.print()
+    press_any_key()
+
 # [ menu ]
 def show_menu():
     console.print(f"[title]{t('menu.title')}[/]")
     console.print(f"[accent]1[/] [value]{t('menu.option.download')}[/]")
     console.print(f"[accent]2[/] [value]{t('menu.option.settings')}[/]")
-    console.print(f"[accent]3[/] [value]{t('menu.option.about')}[/]")
+    console.print(f"[accent]3[/] [value]{t('menu.option.history')}[/]")
+    console.print(f"[accent]4[/] [value]{t('menu.option.about')}[/]")
 
 MENU_ACTIONS = {
     "1": download_flow,
     "2": settings_flow,
-    "3": about_flow,
+    "3": history_flow,
+    "4": about_flow,
 }
 
 # [ main ]

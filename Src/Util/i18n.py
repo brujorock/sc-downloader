@@ -28,9 +28,18 @@ TRANSLATIONS = {
         "menu.title": "Menu:",
         "menu.option.download": "Download a movie or TV series",
         "menu.option.settings": "Settings",
+        "menu.option.history": "Search & download history",
         "menu.option.about": "About SCD",
         "menu.choose_option": "Choose an option",
         "menu.invalid_option": "Invalid option.",
+
+        # history
+        "history.title": "Search & Download History",
+        "history.searches_title": "Recent searches",
+        "history.downloads_title": "Recent downloads",
+        "history.empty": "No items to show.",
+        "table.when.col": "When",
+        "table.query.col": "Search term",
 
         # download flow
         "download.init": "Initialization:",
@@ -180,9 +189,18 @@ TRANSLATIONS = {
         "menu.title": "Menu:",
         "menu.option.download": "Scarica film o serie TV",
         "menu.option.settings": "Impostazioni",
+        "menu.option.history": "Cronologia ricerche e download",
         "menu.option.about": "About SCD",
         "menu.choose_option": "Seleziona un'opzione",
         "menu.invalid_option": "Opzione non valida.",
+
+        # history
+        "history.title": "Cronologia ricerche e download",
+        "history.searches_title": "Ricerche recenti",
+        "history.downloads_title": "Download recenti",
+        "history.empty": "Non ci sono elementi da visualizzare.",
+        "table.when.col": "Quando",
+        "table.query.col": "Termine cercato",
 
         "download.init": "Inizializzazione:",
         "download.search.title": "Ricerca",
@@ -319,9 +337,18 @@ TRANSLATIONS = {
         "menu.title": "Menu:",
         "menu.option.download": "Descargar una pelicula o serie de TV",
         "menu.option.settings": "Ajustes",
+        "menu.option.history": "Historial de busquedas y descargas",
         "menu.option.about": "Acerca de SCD",
         "menu.choose_option": "Elige una opcion",
         "menu.invalid_option": "Opcion no valida.",
+
+        # history
+        "history.title": "Historial de busquedas y descargas",
+        "history.searches_title": "Busquedas recientes",
+        "history.downloads_title": "Descargas recientes",
+        "history.empty": "No hay elementos para mostrar.",
+        "table.when.col": "Cuando",
+        "table.query.col": "Termino buscado",
 
         "download.init": "Inicializacion:",
         "download.search.title": "Busqueda",

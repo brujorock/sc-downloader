@@ -152,6 +152,7 @@ def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_sel
     download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path, subtitle_prefix=mp4_name)
 
 def main_dw_tv(tv_id, tv_name, version, domain):
+    """Returns True if at least one episode was actually downloaded, False if the user canceled out."""
 
     token = get_token(tv_id, domain)
 
@@ -166,7 +167,7 @@ def main_dw_tv(tv_id, tv_name, version, domain):
         seasons_to_download = ask_selection(f"[prompt]{t('tv.season_prompt')}[/]", num_season_find)
 
         if seasons_to_download is None:
-            return
+            return False
 
         if len(seasons_to_download) == 1:
             # A single season was picked: let the user choose which episodes.
@@ -194,7 +195,7 @@ def main_dw_tv(tv_id, tv_name, version, domain):
                 console.rule(style="muted")
                 dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
 
-            return
+            return True
 
         # Multiple/all seasons were picked: download every episode of each.
         for season_select in seasons_to_download:
@@ -203,6 +204,8 @@ def main_dw_tv(tv_id, tv_name, version, domain):
                 console.print()
                 console.rule(style="muted")
                 dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
+
+        return True
 
         return
 
