@@ -5,7 +5,6 @@ from Src.Api.film import main_dw_film as download_film
 from Src.Api.tv import main_dw_tv as download_tv
 from Src.Util.message import msg_start
 from Src.Util.console import console, msg
-from Src.Util.os import remove_folder
 from Src.Util.selection import ask_selection
 from Src.Util.i18n import t, load_language, set_language, get_language, SUPPORTED_LANGUAGES, LANGUAGE_NAMES
 from Src.Util.history import add_search, add_download, get_recent_searches, get_recent_downloads
@@ -192,7 +191,11 @@ def main():
         console.print(f"[error]{t('app.python_version_error')}[/]")
         sys.exit(0)
 
-    remove_folder("tmp")
+    # Not wiping tmp/ here on purpose: with multiple app instances running at
+    # once, one instance starting up would delete another instance's
+    # in-progress download folder mid-transfer. Each download already cleans
+    # up its own uniquely-named temp folder when it finishes (see join() in
+    # my_m3u8.py), so there's nothing left here that needs a blanket wipe.
     msg_start()
 
     while True:
