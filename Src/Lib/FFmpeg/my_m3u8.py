@@ -334,8 +334,12 @@ class M3U8_Segments:
     def join(self, output_filename):
         """Join all segments file to a mp4 file name"""
 
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        file_list_path = os.path.join(current_dir, 'file_list.txt')
+        # Keep the concat list inside this instance's own temp_folder (unique
+        # per download via uuid4) instead of a fixed path next to this module.
+        # A shared fixed path would collide whenever two downloads — even in
+        # two separate app instances running at once — call join() around the
+        # same time, causing Windows to refuse access to the file mid-write.
+        file_list_path = os.path.join(self.temp_folder, 'file_list.txt')
 
         ts_files = [f for f in os.listdir(self.temp_folder) if f.endswith(".ts")]
         def extract_number(file_name):
@@ -344,8 +348,7 @@ class M3U8_Segments:
 
         with open(file_list_path, 'w') as f:
             for ts_file in ts_files:
-                relative_path = os.path.relpath(os.path.join(self.temp_folder, ts_file), current_dir)
-                f.write(f"file '{relative_path}'\n")
+                f.write(f"file '{ts_file}'\n")
 
         console.log(f"[info]{t('m3u8.joining_files')}[/]")
         try:
@@ -353,12 +356,10 @@ class M3U8_Segments:
         except ffmpeg.Error as e:
             stderr = e.stderr.decode('utf-8', errors='ignore') if e.stderr else str(e)
             console.log(f"[error]{t('m3u8.save_error', error=stderr)}[/]")
-            os.remove(file_list_path)
             shutil.rmtree(self.temp_folder, ignore_errors=True)
             sys.exit(0)
 
         console.log(f"[muted]{t('m3u8.cleaning')}[/]")
-        os.remove(file_list_path)
         shutil.rmtree(self.temp_folder, ignore_errors=True)
 
 class M3U8_Downloader:
