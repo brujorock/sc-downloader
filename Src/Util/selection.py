@@ -11,14 +11,16 @@ def parse_selection(text, max_value):
       "N"       -> a single index
       "[N-M]"   -> an inclusive range
       "[N,M,K]" -> an explicit list of indices
+      "0" or "" -> cancel: returns None (empty also covers pressing Esc, which
+                   clears the line before Enter is submitted on Windows consoles)
 
     Raises ValueError with a user-facing, translated message on any invalid input.
     """
 
     text = text.strip()
 
-    if not text:
-        raise ValueError(t("selection.empty"))
+    if not text or text == "0":
+        return None
 
     if text == "*":
         return list(range(1, max_value + 1))
@@ -65,7 +67,11 @@ def parse_selection(text, max_value):
 
 
 def ask_selection(prompt_text, max_value):
-    """Prompt the user for an index selection, re-asking until the input is valid."""
+    """Prompt the user for an index selection, re-asking until the input is valid.
+
+    Returns None if the user cancels (enters "0" or leaves it empty) — callers
+    should treat that as "go back to the previous step".
+    """
 
     while True:
         raw = str(msg.ask(prompt_text))

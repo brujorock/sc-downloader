@@ -156,15 +156,23 @@ def main_dw_tv(tv_id, tv_name, version, domain):
     token = get_token(tv_id, domain)
 
     num_season_find = get_info_tv(tv_id, tv_name, version, domain)
-    console.print(f"[info]{t('tv.seasons_found')}[/] [value]{num_season_find}[/]")
-    console.print(f"[info]{t('tv.season_help')}[/]")
-    seasons_to_download = ask_selection(f"[prompt]{t('tv.season_prompt')}[/]", num_season_find)
 
-    for season_select in seasons_to_download:
-        eps = get_info_season(tv_id, tv_name, domain, version, token, season_select)
+    # Loop so that canceling episode selection (single-season case) drops back
+    # here to re-pick a season, instead of aborting the whole TV download.
+    while True:
+        console.print(f"[info]{t('tv.seasons_found')}[/] [value]{num_season_find}[/]")
+        console.print(f"[info]{t('tv.season_help')}[/]")
+        console.print(f"[muted]{t('selection.cancel_hint')}[/]")
+        seasons_to_download = ask_selection(f"[prompt]{t('tv.season_prompt')}[/]", num_season_find)
+
+        if seasons_to_download is None:
+            return
 
         if len(seasons_to_download) == 1:
             # A single season was picked: let the user choose which episodes.
+            season_select = seasons_to_download[0]
+            eps = get_info_season(tv_id, tv_name, domain, version, token, season_select)
+
             console.print()
             table = Table(show_header=True, header_style="title", border_style="muted")
             table.add_column(t("table.episode.col"), style="accent", justify="right")
@@ -174,13 +182,27 @@ def main_dw_tv(tv_id, tv_name, version, domain):
             console.print(table)
 
             console.print(f"[info]{t('tv.episode_help')}[/]")
+            console.print(f"[muted]{t('selection.cancel_hint')}[/]")
             eps_to_download = ask_selection(f"[prompt]{t('tv.episode_prompt')}[/]", len(eps))
-        else:
-            # Multiple/all seasons were picked: download every episode of each.
-            eps_to_download = list(range(1, len(eps) + 1))
 
-        for ep_index in eps_to_download:
-            console.print()
-            console.rule(style="muted")
-            dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
+            if eps_to_download is None:
+                console.print()
+                continue
+
+            for ep_index in eps_to_download:
+                console.print()
+                console.rule(style="muted")
+                dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
+
+            return
+
+        # Multiple/all seasons were picked: download every episode of each.
+        for season_select in seasons_to_download:
+            eps = get_info_season(tv_id, tv_name, domain, version, token, season_select)
+            for ep_index in range(1, len(eps) + 1):
+                console.print()
+                console.rule(style="muted")
+                dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
+
+        return
 

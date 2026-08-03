@@ -140,7 +140,6 @@ TRANSLATIONS = {
         "duration.label": "Duration",
 
         # selection parsing
-        "selection.empty": "Empty input.",
         "selection.empty_brackets": "Invalid format: empty brackets.",
         "selection.invalid_list": "Invalid list format: '{text}'. Use [N,M,K] with whole numbers, e.g. [1,3,5].",
         "selection.invalid_range": "Invalid range format: '{text}'. Use [N-M], e.g. [1-2].",
@@ -149,6 +148,7 @@ TRANSLATIONS = {
         "selection.invalid_format": "'{text}' is not a valid format. Use a number, '*' or [N-M] (e.g. [1-2]).",
         "selection.out_of_range": "Index out of range: must be between 1 and {max}.",
         "selection.retry_suffix": "Try again.",
+        "selection.cancel_hint": "Enter [value]0[/] to go back.",
 
         # filesystem
         "fs.remove_folder_error": "Error removing folder '{path}': {error}",
@@ -281,7 +281,6 @@ TRANSLATIONS = {
         "duration.error": "Errore: {error}",
         "duration.label": "Durata",
 
-        "selection.empty": "Input vuoto.",
         "selection.empty_brackets": "Formato non valido: parentesi vuote.",
         "selection.invalid_list": "Formato lista non valido: '{text}'. Usa [N,M,K] con numeri interi, es. [1,3,5].",
         "selection.invalid_range": "Formato intervallo non valido: '{text}'. Usa [N-M], es. [1-2].",
@@ -290,6 +289,7 @@ TRANSLATIONS = {
         "selection.invalid_format": "'{text}' non e' un formato valido. Usa un numero, '*' oppure [N-M] (es. [1-2]).",
         "selection.out_of_range": "Indice fuori range: deve essere tra 1 e {max}.",
         "selection.retry_suffix": "Riprova.",
+        "selection.cancel_hint": "Inserisci [value]0[/] per tornare indietro.",
 
         "fs.remove_folder_error": "Errore nella rimozione della cartella '{path}': {error}",
         "fs.remove_file_error": "Errore nella rimozione del file '{path}': {error}",
@@ -420,7 +420,6 @@ TRANSLATIONS = {
         "duration.error": "Error: {error}",
         "duration.label": "Duracion",
 
-        "selection.empty": "Entrada vacia.",
         "selection.empty_brackets": "Formato no valido: corchetes vacios.",
         "selection.invalid_list": "Formato de lista no valido: '{text}'. Usa [N,M,K] con numeros enteros, ej. [1,3,5].",
         "selection.invalid_range": "Formato de rango no valido: '{text}'. Usa [N-M], ej. [1-2].",
@@ -429,6 +428,7 @@ TRANSLATIONS = {
         "selection.invalid_format": "'{text}' no es un formato valido. Usa un numero, '*' o [N-M] (ej. [1-2]).",
         "selection.out_of_range": "Indice fuera de rango: debe estar entre 1 y {max}.",
         "selection.retry_suffix": "Intentalo de nuevo.",
+        "selection.cancel_hint": "Escribe [value]0[/] para volver atras.",
 
         "fs.remove_folder_error": "Error al eliminar la carpeta '{path}': {error}",
         "fs.remove_file_error": "Error al eliminar el archivo '{path}': {error}",

@@ -37,36 +37,49 @@ def download_flow():
     if not domain:
         return
 
-    console.rule(f"[title]{t('download.search.title')}[/]", style="muted")
-    film_search = msg.ask(f"[prompt]{t('download.search.prompt')}[/]").strip()
-    db_title = Page.search(film_search, domain)
-    console.print()
+    while True:
+        console.rule(f"[title]{t('download.search.title')}[/]", style="muted")
+        console.print(f"[muted]{t('selection.cancel_hint')}[/]")
+        film_search = msg.ask(f"[prompt]{t('download.search.prompt')}[/]").strip()
 
-    if len(db_title) == 0:
-        console.print(f"[error]{t('download.search.empty')}[/]")
-        return
+        if film_search in ("", "0"):
+            return
 
-    Page.display_search_results(db_title)
-    console.print()
-    console.print(f"[info]{t('download.search.help1')}[/]")
-    console.print(f"[muted]{t('download.search.help2')}[/]")
-    selected_indexes = ask_selection(f"[prompt]{t('download.index_prompt')}[/]", len(db_title))
+        db_title = Page.search(film_search, domain)
+        console.print()
 
-    for n in selected_indexes:
-        selected_title = db_title[n - 1]
+        if len(db_title) == 0:
+            console.print(f"[error]{t('download.search.empty')}[/]")
+            console.print()
+            continue
+
+        Page.display_search_results(db_title)
+        console.print()
+        console.print(f"[info]{t('download.search.help1')}[/]")
+        console.print(f"[muted]{t('download.search.help2')}[/]")
+        console.print(f"[muted]{t('selection.cancel_hint')}[/]")
+        selected_indexes = ask_selection(f"[prompt]{t('download.index_prompt')}[/]", len(db_title))
+
+        if selected_indexes is None:
+            console.print()
+            continue
+
+        for n in selected_indexes:
+            selected_title = db_title[n - 1]
+
+            console.print()
+            console.rule(style="muted")
+
+            if selected_title['type'] == "movie":
+                console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
+                download_film(selected_title['id'], selected_title['slug'], domain)
+            else:
+                console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
+                download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
 
         console.print()
-        console.rule(style="muted")
-
-        if selected_title['type'] == "movie":
-            console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
-            download_film(selected_title['id'], selected_title['slug'], domain)
-        else:
-            console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
-            download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
-
-    console.print()
-    console.print(f"[success]{t('download.completed')}[/]")
+        console.print(f"[success]{t('download.completed')}[/]")
+        return
 
 def language_flow():
     console.print(f"[info]{t('settings.language.current')}:[/] [value]{LANGUAGE_NAMES[get_language()]}[/]")
@@ -76,8 +89,12 @@ def language_flow():
         marker = " *" if code == get_language() else ""
         console.print(f"[accent]{i}[/] [value]{LANGUAGE_NAMES[code]}{marker}[/]")
 
-    console.print()
+    console.print(f"[muted]{t('selection.cancel_hint')}[/]")
     chosen_index = ask_selection(f"[prompt]{t('settings.language.prompt')}[/]", len(SUPPORTED_LANGUAGES))
+
+    if chosen_index is None:
+        return
+
     chosen_code = SUPPORTED_LANGUAGES[chosen_index[0] - 1]
     set_language(chosen_code)
 
