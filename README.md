@@ -1,17 +1,17 @@
 ## SCDownloader by BarbieGirl♥
 
-## Overview.
-This repository provide a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
+## Overview
+This repository provides a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
 
-This is a fork of the original [Streaming Community downloader](https://github.com/Ghost6446/StreamingCommunity_api), rewritten with an interactive menu and a Barbie-themed CLI.
+This is a fork of the original [Streaming Community downloader](https://github.com/Ghost6446/StreamingCommunity_api), rewritten with an interactive menu, multi-language support, and a Barbie-themed CLI.
 
-## Requirement
+## Requirements
 Make sure you have the following prerequisites installed on your system:
 
 * python > [3.11](https://www.python.org/downloads/)
 * ffmpeg [win](https://www.gyan.dev/ffmpeg/builds/)
 
-## Installation library
+## Installation
 Install the required Python libraries using the following command:
 ```bash
 pip install -r requirements.txt
@@ -25,9 +25,12 @@ Or run it manually with the venv activated:
 python run.py
 ```
 You'll get an interactive menu:
-1. **Scarica film o serie TV** — search and download (requires a domain to be configured first, see option 2).
-2. **Impostazioni** — set or change the streaming domain used to search/download. Required before your first download.
+1. **Download a movie or TV series** — search and download (requires a domain to be configured first, see option 2).
+2. **Settings** — configure the streaming domain and the interface language.
 3. **About SCD** — info about the project.
+
+## Language
+The app is available in **English** (default), **Italian**, and **Spanish**. Change it anytime from `Settings -> Language` — the switch applies immediately and is remembered for future runs.
 
 ## Auto Update
 Keep your script up to date with the latest features by running:
@@ -44,7 +47,9 @@ python update.py
 
 - Subtitles: automatically downloads Italian, English and Spanish subtitles (when available), skipping every other language.
 
-- Output layout: films go to `downloads/film/[nome film]/`, with subtitles in a `subtitle/` subfolder next to the video. TV episodes go to `downloads/tv/[nome serie]/`.
+- Resilient downloads: failed segments are retried automatically with backoff, and you're warned clearly if a download ends up incomplete after all attempts.
+
+- Output layout: films go to `downloads/film/[movie name]/`, with subtitles in a `subtitle/` subfolder next to the video. TV episodes go to `downloads/tv/[show name]/`.
 
 ## Disclaimer
 This project is for educational purposes only. Anyone downloading copyrighted or otherwise illegal content through it is solely responsible for their own actions.

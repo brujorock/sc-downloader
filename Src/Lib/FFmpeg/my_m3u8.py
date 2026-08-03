@@ -3,6 +3,7 @@
 # Class import
 from Src.Util.console import console
 from Src.Util.headers import get_headers
+from Src.Util.i18n import t
 from Src.Lib.FFmpeg.util import print_duration_table
 
 # Import
@@ -99,7 +100,7 @@ class M3U8_Parser:
                     self.subtitle.append(segment.uri)
 
         except Exception as e:
-            print(f"Errore nel parsing del contenuto M3U8: {e}")
+            print(t("m3u8.parse_error", error=e))
 
     def get_best_quality(self):
         """Need to fix, return m3u8 valid with best quality"""
@@ -108,7 +109,7 @@ class M3U8_Parser:
         if self.video_playlist:
             return self.video_playlist[0].get('uri')
         else:
-            print("Nessuna playlist video trovata")
+            print(t("m3u8.no_video_playlist"))
             return None
         
     def download_subtitle(self, subtitle_dir, filename_prefix=""):
@@ -122,7 +123,7 @@ class M3U8_Parser:
                     continue
 
                 os.makedirs(subtitle_dir, exist_ok=True)
-                console.log(f"[info]Download sottotitolo:[/] [value]{name_language}[/]")
+                console.log(f"[info]{t('m3u8.download_subtitle')}[/] [value]{name_language}[/]")
                 req_sub_content = requests.get(sub_info.get("uri"))
 
                 sub_parse = M3U8_Parser()
@@ -136,13 +137,13 @@ class M3U8_Parser:
                 open(os.path.join(subtitle_dir, sub_filename), "wb").write(requests.get(url_subititle).content)
 
         else:
-            console.log("[warning]Nessun sottotitolo trovato[/]")
+            console.log(f"[warning]{t('m3u8.no_subtitle')}[/]")
 
     def get_track_audio(self, language_name):   # Ex. English
         """Return url of audio eng audio playlist if present"""
 
         if self.audio_ts:
-            console.log(f"[info]Trovate {len(self.audio_ts)} playlist con audio[/]")
+            console.log(f"[info]{t('m3u8.found_audio_playlists', count=len(self.audio_ts))}[/]")
 
             if language_name != None:
                 for obj_audio in self.audio_ts:
@@ -152,7 +153,7 @@ class M3U8_Parser:
             return None
 
         else:
-            console.log("[warning]Impossibile trovare playlist con audio[/]")
+            console.log(f"[warning]{t('m3u8.no_audio_playlist')}[/]")
                 
 class M3U8_Segments:
     def __init__(self, url, key=None):
@@ -192,7 +193,7 @@ class M3U8_Segments:
         if response.ok:
             self.parse_data(response.text)
         else:
-            console.log(f"[error]M3u8 non valido, errore: {response.status_code}[/]")
+            console.log(f"[error]{t('m3u8.invalid', status=response.status_code)}[/]")
             sys.exit(0)
 
     def get_req_ts(self, ts_url):
@@ -244,7 +245,7 @@ class M3U8_Segments:
     def download_ts(self):
         """Loop to donwload all segment of playlist m3u8 and break it if there is no progress"""
 
-        progress_counter = tqdm(total=len(self.segments), unit="seg", desc="[info]Scaricamento[/]")
+        progress_counter = tqdm(total=len(self.segments), unit="seg", desc=f"[info]{t('m3u8.progress.download')}[/]")
 
         # Event to signal when to quit
         quit_event = threading.Event()
@@ -266,7 +267,7 @@ class M3U8_Segments:
                     try:
                         future.result()
                     except Exception as e:
-                        print(f"Si e' verificato un errore: {str(e)}")
+                        print(t("m3u8.task_error", error=str(e)))
                         # Handle the error as needed
         finally:
             progress_counter.close()
@@ -283,10 +284,10 @@ class M3U8_Segments:
             self.failed_segments = []
 
             backoff = min(2 * retry_attempt, 20)
-            console.log(f"[warning]Tentativo {retry_attempt}/{self.max_retry}: {len(to_retry)} segmenti falliti (attesa {backoff}s)[/]")
+            console.log(f"[warning]{t('m3u8.retry', attempt=retry_attempt, max=self.max_retry, count=len(to_retry), backoff=backoff)}[/]")
             time.sleep(backoff)
 
-            retry_counter = tqdm(total=len(to_retry), unit="seg", desc="[warning]Tentativo[/]")
+            retry_counter = tqdm(total=len(to_retry), unit="seg", desc=f"[warning]{t('m3u8.progress.retry')}[/]")
 
             with ThreadPoolExecutor(max_workers=RETRY_MAX_WORKER) as executor:
                 futures = [executor.submit(self.save_ts, index, retry_counter, threading.Event()) for index in to_retry]
@@ -294,15 +295,15 @@ class M3U8_Segments:
                     try:
                         future.result()
                     except Exception as e:
-                        print(f"Si e' verificato un errore: {str(e)}")
+                        print(t("m3u8.task_error", error=str(e)))
 
             retry_counter.close()
 
         if self.failed_segments:
             console.print()
-            console.rule("[error]ATTENZIONE: download incompleto[/]", style="error")
-            console.print(f"[error]{len(self.failed_segments)} segmenti su {len(self.segments)} NON sono stati scaricati dopo {self.max_retry} tentativi.[/]")
-            console.print("[error]Il file risultante avra' dei vuoti/salti in corrispondenza di questi punti.[/]")
+            console.rule(f"[error]{t('m3u8.incomplete_title')}[/]", style="error")
+            console.print(f"[error]{t('m3u8.incomplete_body1', failed=len(self.failed_segments), total=len(self.segments), max=self.max_retry)}[/]")
+            console.print(f"[error]{t('m3u8.incomplete_body2')}[/]")
             console.rule(style="error")
             console.print()
 
@@ -319,8 +320,8 @@ class M3U8_Segments:
 
             elapsed_time = time.time() - start_time
             if elapsed_time > self.progress_timeout:
-                console.log(f"[warning]Nessun progresso da {self.progress_timeout} secondi.[/]")
-                console.log("[warning]Interruzione ThreadPoolExecutor...[/]")
+                console.log(f"[warning]{t('m3u8.no_progress', seconds=self.progress_timeout)}[/]")
+                console.log(f"[warning]{t('m3u8.breaking_pool')}[/]")
                 timeout_checker()  # Set the flag indicating a timeout
                 quit_event.set()  # Signal the main thread to quit
                 break  # Break the loop instead of exiting
@@ -346,17 +347,17 @@ class M3U8_Segments:
                 relative_path = os.path.relpath(os.path.join(self.temp_folder, ts_file), current_dir)
                 f.write(f"file '{relative_path}'\n")
 
-        console.log("[info]Inizio unione di tutti i file[/]")
+        console.log(f"[info]{t('m3u8.joining_files')}[/]")
         try:
             ffmpeg.input(file_list_path, format='concat', safe=0).output(output_filename, c='copy', loglevel='quiet').overwrite_output().run(capture_stdout=True, capture_stderr=True)
         except ffmpeg.Error as e:
             stderr = e.stderr.decode('utf-8', errors='ignore') if e.stderr else str(e)
-            console.log(f"[error]Errore nel salvataggio del MP4: {stderr}[/]")
+            console.log(f"[error]{t('m3u8.save_error', error=stderr)}[/]")
             os.remove(file_list_path)
             shutil.rmtree(self.temp_folder, ignore_errors=True)
             sys.exit(0)
 
-        console.log("[muted]Pulizia in corso...[/]")
+        console.log(f"[muted]{t('m3u8.cleaning')}[/]")
         os.remove(file_list_path)
         shutil.rmtree(self.temp_folder, ignore_errors=True)
 
@@ -372,7 +373,7 @@ class M3U8_Downloader:
 
     def start(self):
         video_m3u8 = M3U8_Segments(self.m3u8_url, self.key)
-        console.log("[title]Download segmenti video[/]")
+        console.log(f"[title]{t('m3u8.download_video')}[/]")
         video_m3u8.get_info()
         video_m3u8.download_ts()
         video_m3u8.join(self.video_path)
@@ -381,7 +382,7 @@ class M3U8_Downloader:
 
         if self.m3u8_audio != None:
             audio_m3u8 = M3U8_Segments(self.m3u8_audio, self.key)
-            console.log("[title]Download segmenti audio[/]")
+            console.log(f"[title]{t('m3u8.download_audio')}[/]")
             audio_m3u8.get_info()
             audio_m3u8.download_ts()
             audio_m3u8.join(self.audio_path)
@@ -416,7 +417,7 @@ class M3U8_Downloader:
                 .run(capture_stdout=True, capture_stderr=True)
             )
 
-            console.print("[success]Unione completata con successo.[/]")
+            console.print(f"[success]{t('m3u8.merge_success')}[/]")
 
             # Only touch the raw tracks once the merged file actually exists
             os.remove(self.video_path)
@@ -425,8 +426,8 @@ class M3U8_Downloader:
 
         except ffmpeg.Error as e:
             stderr = e.stderr.decode('utf-8', errors='ignore') if e.stderr else str(e)
-            console.log(f"[error]Errore nell'unione audio/video: {stderr}[/]")
-            console.log(f"[warning]Video e audio grezzi mantenuti in: {self.video_path} , {self.audio_path}[/]")
+            console.log(f"[error]{t('m3u8.merge_error', error=stderr)}[/]")
+            console.log(f"[warning]{t('m3u8.merge_kept_raw', video=self.video_path, audio=self.audio_path)}[/]")
             if os.path.exists(merged_path):
                 os.remove(merged_path)
 
@@ -440,7 +441,7 @@ def df_make_req(url):
     if response.ok:
         return response.text
     else:
-        console.log(f"[error]Url non valido, errore: {response.status_code}[/]")
+        console.log(f"[error]{t('m3u8.invalid_url', status=response.status_code)}[/]")
         sys.exit(0)
 
 def download_subtitle(url, name_language):
@@ -449,7 +450,7 @@ def download_subtitle(url, name_language):
     path = os.path.join("downloads", "subtitle")
     os.makedirs(path, exist_ok=True)
 
-    console.log(f"[info]Download sottotitolo:[/] [value]{name_language}[/]")
+    console.log(f"[info]{t('m3u8.download_subtitle')}[/] [value]{name_language}[/]")
     open(os.path.join(path, name_language + ".vtt"), "wb").write(requests.get(url).content)
 
 def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_subtitle=None, key=None,  output_filename=os.path.join("downloads", "output.mp4"), subtitle_prefix="", log=False):
@@ -463,31 +464,31 @@ def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_s
     subtitle_dir = os.path.join(output_dir, "subtitle")
 
     if m3u8_playlist != None:
-        console.log("[info]Download m3u8 dalla playlist[/]")
+        console.log(f"[info]{t('m3u8.download_from_playlist')}[/]")
 
         # Parse m3u8 playlist
         parse_class_m3u8 = M3U8_Parser()
 
         # Parse directly m3u8 content pass if present
-        if "#EXTM3U" not in m3u8_playlist: 
+        if "#EXTM3U" not in m3u8_playlist:
             parse_class_m3u8.parse_data(df_make_req(m3u8_playlist))
-        else: 
+        else:
             parse_class_m3u8.parse_data(m3u8_playlist)
 
 
         # Get italian language in present as defualt
         if DOWNLOAD_DEFAULT_LANGUAGE:
             m3u8_audio = parse_class_m3u8.get_track_audio("Italian")
-            console.log(f"[info]Lingua selezionata:[/] [value]{m3u8_audio}[/]")
+            console.log(f"[info]{t('m3u8.language_selected')}[/] [value]{m3u8_audio}[/]")
 
 
         # Get best quality
         if m3u8_index == None:
             m3u8_index = parse_class_m3u8.get_best_quality()
             if "https" in m3u8_index:
-                if log: console.log(f"[info]Indice m3u8 selezionato:[/] [value]{m3u8_index}[/]")
+                if log: console.log(f"[info]{t('m3u8.index_selected')}[/] [value]{m3u8_index}[/]")
             else:
-                console.log("[error]Impossibile trovare un indice m3u8 valido[/]")
+                console.log(f"[error]{t('m3u8.no_valid_index')}[/]")
                 sys.exit(0)
 
 
@@ -511,5 +512,5 @@ def download_m3u8(m3u8_playlist=None, m3u8_index = None, m3u8_audio=None, m3u8_s
 
 
     # Download m3u8 index, with segments
-    if log: console.log(f"[info]Download m3u8 dall'indice:[/] [value]{m3u8_index}[/]")
+    if log: console.log(f"[info]{t('m3u8.download_from_index')}[/] [value]{m3u8_index}[/]")
     M3U8_Downloader(m3u8_index, m3u8_audio, key=key, output_filename=output_filename).start()

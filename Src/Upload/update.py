@@ -2,6 +2,7 @@
 
 # Class import
 from Src.Util.console import console
+from Src.Util.i18n import t
 
 # General import
 import os, requests, time
@@ -19,7 +20,7 @@ def get_install_version():
     return about['__version__']
 
 def main_update():
-    console.print("[info]Verifica versione github in corso...[/]")
+    console.print(f"[info]{t('update.checking')}[/]")
 
     json = requests.get(f"https://api.github.com/repos/{repo_user}/{repo_name}/releases").json()[0]
     stargazers_count = requests.get(f"https://api.github.com/repos/{repo_user}/{repo_name}").json()['stargazers_count']
@@ -33,14 +34,13 @@ def main_update():
         percentual_stars = 0
 
     if get_install_version() != last_version:
-        console.print(f"[warning]E' disponibile una nuova versione:[/] [value]{json['zipball_url']}[/]")
-        console.print(f"[info]Versione:[/] [value]{json['name']}[/]")
+        console.print(f"[warning]{t('update.new_version')}[/] [value]{json['zipball_url']}[/]")
+        console.print(f"[info]{t('update.version_label')}[/] [value]{json['name']}[/]")
     else:
-        console.print("[success]Tutto aggiornato[/]")
-        console.print(f"[info]Ultima versione:[/] [value]{json['name']}[/]")
+        console.print(f"[success]{t('update.up_to_date')}[/]")
+        console.print(f"[info]{t('update.latest_version')}[/] [value]{json['name']}[/]")
 
     console.print()
-    console.print(f"[muted]{repo_name} e' stato scaricato {down_count} volte, ma solo il {percentual_stars}% di voi(!!) ha messo una stella.\n"
-                   f"Aiuta la crescita del repository oggi, lasciando una stella e condividendolo con altri online![/]")
+    console.print(f"[muted]{t('update.stats', repo=repo_name, count=down_count, percent=percentual_stars)}[/]")
     time.sleep(2.5)
     console.print()

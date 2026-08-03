@@ -2,6 +2,7 @@
 
 # Class
 from Src.Util.console import console
+from Src.Util.i18n import t
 
 # Import
 import subprocess, os, requests, zipfile, sys, ctypes, os, sys
@@ -24,7 +25,7 @@ def download_ffmpeg():
 
     # Name of the directory where FFmpeg will be extracted
     ffmpeg_dir = "ffmpeg"
-    console.print("[warning]Download di FFmpeg in corso...[/]")
+    console.print(f"[warning]{t('ffmpeg.downloading')}[/]")
 
     # Download the FFmpeg zip file
     response = requests.get(ffmpeg_url)
@@ -45,22 +46,22 @@ def download_ffmpeg():
 
 def check_ffmpeg():
 
-    console.print("[info]Verifica di ffmpeg in corso...[/]", end="")
+    console.print(f"[info]{t('ffmpeg.checking')}[/]", end="")
 
     try:
         subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        console.print(" [success]✓ Trovato[/]")
+        console.print(f" [success]✓ {t('ffmpeg.found')}[/]")
     except:
         console.print()
         try:
-            console.print("[warning]FFmpeg non e' nel PATH. Download e aggiunta al PATH in corso...[/]")
+            console.print(f"[warning]{t('ffmpeg.not_in_path')}[/]")
 
             if not isAdmin():
-                console.log("[error]Devi essere amministratore per procedere![/]")
+                console.log(f"[error]{t('ffmpeg.need_admin')}[/]")
                 sys.exit(0)
 
             download_ffmpeg()
             sys.exit(0)
         except:
-            console.print("[error]Impossibile scaricare o aggiungere FFmpeg al PATH.[/]")
+            console.print(f"[error]{t('ffmpeg.download_failed')}[/]")
             sys.exit(0)

@@ -4,6 +4,7 @@
 from Src.Util.headers import get_headers
 from Src.Util.console import console
 from Src.Util.selection import ask_selection
+from Src.Util.i18n import t
 from Src.Lib.FFmpeg.my_m3u8 import download_m3u8
 
 # General import
@@ -30,7 +31,7 @@ def get_info_tv(id_film, title_name, site_version, domain):
     if req.ok:
         return req.json()['props']['title']['seasons_count']
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def get_info_season(tv_id, tv_name, domain, version, token, n_stagione):
@@ -42,7 +43,7 @@ def get_info_season(tv_id, tv_name, domain, version, token, n_stagione):
     if req.ok:
         return [{'id': ep['id'], 'n': ep['number'], 'name': ep['name']} for ep in req.json()['props']['loadedSeason']['episodes']]
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def get_iframe(tv_id, ep_id, domain, token):
@@ -57,7 +58,7 @@ def get_iframe(tv_id, ep_id, domain, token):
         embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
         return embed_script, url_embed
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def get_master_playlist_url(embed_script, url_embed):
@@ -91,7 +92,7 @@ def get_master_playlist(embed_script, url_embed):
     if req.ok:
         return req.text
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def select_video_audio(m3u8_playlist):
@@ -114,7 +115,7 @@ def select_video_audio(m3u8_playlist):
                 video_candidates.append((int(bandwidth_match.group(1)) if bandwidth_match else 0, uri))
 
     if not video_candidates:
-        console.log("[error]Impossibile trovare una qualita' video valida nella playlist[/]")
+        console.log(f"[error]{t('tv.no_valid_video')}[/]")
         sys.exit(0)
 
     video_url = max(video_candidates, key=lambda x: x[0])[1]
@@ -128,14 +129,14 @@ def get_m3u8_key(url_embed):
     if req.ok:
         return "".join(["{:02x}".format(c) for c in req.content])
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 
 # [func \ main]
 def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_select):
 
-    console.print(f"[title]Download episodio:[/] [value]{eps[index_ep_select]['n']} - {eps[index_ep_select]['name']}[/]")
+    console.print(f"[title]{t('tv.download_episode')}[/] [value]{eps[index_ep_select]['n']} - {eps[index_ep_select]['name']}[/]")
     embed_script, url_embed = get_iframe(tv_id, eps[index_ep_select]['id'], domain, token)
     m3u8_playlist = get_master_playlist(embed_script, url_embed)
     m3u8_url, m3u8_url_audio = select_video_audio(m3u8_playlist)
@@ -146,7 +147,7 @@ def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_sel
     mp4_path = os.path.join("downloads", "tv", tv_name, mp4_format)
 
     if m3u8_url_audio != None:
-        console.print("[info]Uso traccia audio m3u8:[/] [success]si[/]")
+        console.print(f"[info]{t('tv.audio_track_used')}[/] [success]{t('common.yes')}[/]")
 
     download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path, subtitle_prefix=mp4_name)
 
@@ -155,12 +156,9 @@ def main_dw_tv(tv_id, tv_name, version, domain):
     token = get_token(tv_id, domain)
 
     num_season_find = get_info_tv(tv_id, tv_name, version, domain)
-    console.print(f"[info]Stagioni trovate:[/] [value]{num_season_find}[/]")
-    console.print(
-        "[info]Inserisci il [value]numero[/] della stagione, [value](*)[/] per tutte le stagioni, "
-        "[value][1-2][/] per un intervallo.[/]"
-    )
-    seasons_to_download = ask_selection("[prompt]Numero stagione[/]", num_season_find)
+    console.print(f"[info]{t('tv.seasons_found')}[/] [value]{num_season_find}[/]")
+    console.print(f"[info]{t('tv.season_help')}[/]")
+    seasons_to_download = ask_selection(f"[prompt]{t('tv.season_prompt')}[/]", num_season_find)
 
     for season_select in seasons_to_download:
         eps = get_info_season(tv_id, tv_name, domain, version, token, season_select)
@@ -169,17 +167,14 @@ def main_dw_tv(tv_id, tv_name, version, domain):
             # A single season was picked: let the user choose which episodes.
             console.print()
             table = Table(show_header=True, header_style="title", border_style="muted")
-            table.add_column("Ep.", style="accent", justify="right")
-            table.add_column("Titolo", style="value")
+            table.add_column(t("table.episode.col"), style="accent", justify="right")
+            table.add_column(t("table.title.col"), style="value")
             for ep in eps:
                 table.add_row(str(ep['n']), ep['name'])
             console.print(table)
 
-            console.print(
-                "[info]Inserisci il [value]numero[/] dell'episodio, [value](*)[/] per tutti gli episodi, "
-                "[value][1-2][/] per un intervallo.[/]"
-            )
-            eps_to_download = ask_selection("[prompt]Numero episodio[/]", len(eps))
+            console.print(f"[info]{t('tv.episode_help')}[/]")
+            eps_to_download = ask_selection(f"[prompt]{t('tv.episode_prompt')}[/]", len(eps))
         else:
             # Multiple/all seasons were picked: download every episode of each.
             eps_to_download = list(range(1, len(eps) + 1))

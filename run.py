@@ -8,6 +8,7 @@ from Src.Util.message import msg_start
 from Src.Util.console import console, msg
 from Src.Util.os import remove_folder
 from Src.Util.selection import ask_selection
+from Src.Util.i18n import t, load_language, set_language, get_language, SUPPORTED_LANGUAGES, LANGUAGE_NAMES
 from Src.Lib.FFmpeg.installer import check_ffmpeg
 
 # Import
@@ -19,8 +20,8 @@ except ImportError:
     msvcrt = None
 
 # [ util ]
-def press_any_key(text="[muted]Premi un tasto qualsiasi per tornare al menu principale...[/]"):
-    console.print(text)
+def press_any_key(text=None):
+    console.print(text if text is not None else f"[muted]{t('app.press_any_key')}[/]")
     if msvcrt:
         msvcrt.getch()
     else:
@@ -29,7 +30,7 @@ def press_any_key(text="[muted]Premi un tasto qualsiasi per tornare al menu prin
 # [ menu actions ]
 def download_flow():
 
-    console.print("[title]Inizializzazione:[/]")
+    console.print(f"[title]{t('download.init')}[/]")
     check_ffmpeg()
     domain, site_version = Page.load_domain()
     console.print()
@@ -37,23 +38,20 @@ def download_flow():
     if not domain:
         return
 
-    console.rule("[title]Ricerca[/]", style="muted")
-    film_search = msg.ask("[prompt]Inserisci una parola da cercare nel sito[/]").strip()
+    console.rule(f"[title]{t('download.search.title')}[/]", style="muted")
+    film_search = msg.ask(f"[prompt]{t('download.search.prompt')}[/]").strip()
     db_title = Page.search(film_search, domain)
     console.print()
 
     if len(db_title) == 0:
-        console.print("[error]Nessun elemento trovato.[/]")
+        console.print(f"[error]{t('download.search.empty')}[/]")
         return
 
     Page.display_search_results(db_title)
     console.print()
-    console.print(
-        "[info]Inserisci il [value]numero[/] indice, [value][1-2][/] per un intervallo, "
-        "[value][1,3,5][/] per titoli non consecutivi.[/]"
-    )
-    console.print("[muted]Per le serie TV potrai scegliere anche stagione ed episodio da scaricare.[/]")
-    selected_indexes = ask_selection("[prompt]Indice da scaricare[/]", len(db_title))
+    console.print(f"[info]{t('download.search.help1')}[/]")
+    console.print(f"[muted]{t('download.search.help2')}[/]")
+    selected_indexes = ask_selection(f"[prompt]{t('download.index_prompt')}[/]", len(db_title))
 
     for n in selected_indexes:
         selected_title = db_title[n - 1]
@@ -62,41 +60,67 @@ def download_flow():
         console.rule(style="muted")
 
         if selected_title['type'] == "movie":
-            console.print(f"[title]Film selezionato:[/] [value]{selected_title['name']}[/]")
+            console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
             download_film(selected_title['id'], selected_title['slug'], domain)
         else:
-            console.print(f"[title]Serie TV selezionata:[/] [value]{selected_title['name']}[/]")
+            console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
             download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
 
     console.print()
-    console.print("[success]Completato.[/]")
+    console.print(f"[success]{t('download.completed')}[/]")
+
+def language_flow():
+    console.print(f"[info]{t('settings.language.current')}:[/] [value]{LANGUAGE_NAMES[get_language()]}[/]")
+    console.print()
+
+    for i, code in enumerate(SUPPORTED_LANGUAGES, start=1):
+        marker = " *" if code == get_language() else ""
+        console.print(f"[accent]{i}[/] [value]{LANGUAGE_NAMES[code]}{marker}[/]")
+
+    console.print()
+    chosen_index = ask_selection(f"[prompt]{t('settings.language.prompt')}[/]", len(SUPPORTED_LANGUAGES))
+    chosen_code = SUPPORTED_LANGUAGES[chosen_index[0] - 1]
+    set_language(chosen_code)
+
+    console.print(f"[success]{t('settings.language.saved')}:[/] [value]{LANGUAGE_NAMES[chosen_code]}[/]")
 
 def settings_flow():
-    console.rule("[title]Impostazioni[/]", style="muted")
-    Page.configure_domain()
-    console.print()
-    press_any_key()
+    while True:
+        console.rule(f"[title]{t('settings.title')}[/]", style="muted")
+        console.print(f"[accent]1[/] [value]{t('settings.menu.domain')}[/]")
+        console.print(f"[accent]2[/] [value]{t('settings.menu.language')}[/]")
+        console.print(f"[accent]0[/] [value]{t('settings.menu.back')}[/]")
+        choice = msg.ask(f"[prompt]{t('menu.choose_option')}[/]").strip()
+        console.print()
+
+        if choice == "1":
+            Page.configure_domain()
+            console.print()
+            press_any_key()
+        elif choice == "2":
+            language_flow()
+            console.print()
+            press_any_key()
+        elif choice == "0":
+            return
+        else:
+            console.print(f"[error]{t('menu.invalid_option')}[/]")
+            console.print()
 
 def about_flow():
-    console.rule("[title]About SCD[/]", style="muted")
-    console.print(
-        "[info]Streaming Community Downloader e' stato creato da[/] [value]BarbieGirl♥[/] [info]nel 2026, "
-        "per puro scopo didattico.[/]"
-    )
-    console.print("[info]Non ha fini di lucro e puo' essere scaricato, modificato e utilizzato da chiunque.[/]")
-    console.print(
-        "[warning]Chi lo utilizza per scaricare materiale protetto da copyright o comunque illegale "
-        "se ne assume la piena responsabilita'.[/]"
-    )
+    console.rule(f"[title]{t('about.title')}[/]", style="muted")
+    console.print(t("about.text1"))
+    console.print(t("about.text2"))
+    console.print(t("about.text3"))
     console.print()
     press_any_key()
 
 # [ menu ]
 def show_menu():
-    console.print("[title]Menu:[/]")
-    console.print("[accent]1[/] [value]Scarica film o serie TV[/]")
-    console.print("[accent]2[/] [value]Impostazioni[/]")
-    console.print("[accent]3[/] [value]About SCD[/]")
+    console.print(f"[title]{t('menu.title')}[/]")
+    console.print(f"[accent]1[/] [value]{t('menu.option.download')}[/]")
+    console.print(f"[accent]2[/] [value]{t('menu.option.settings')}[/]")
+    console.print(f"[accent]3[/] [value]{t('menu.option.about')}[/]")
 
 MENU_ACTIONS = {
     "1": download_flow,
@@ -107,8 +131,10 @@ MENU_ACTIONS = {
 # [ main ]
 def main():
 
+    load_language()
+
     if sys.version_info < (3, 11):
-        console.print("[error]Installa una versione di Python > 3.11[/]")
+        console.print(f"[error]{t('app.python_version_error')}[/]")
         sys.exit(0)
 
     remove_folder("tmp")
@@ -116,12 +142,12 @@ def main():
 
     while True:
         show_menu()
-        choice = msg.ask("[prompt]Seleziona un'opzione[/]").strip()
+        choice = msg.ask(f"[prompt]{t('menu.choose_option')}[/]").strip()
         console.print()
 
         action = MENU_ACTIONS.get(choice)
         if action is None:
-            console.print("[error]Opzione non valida.[/]")
+            console.print(f"[error]{t('menu.invalid_option')}[/]")
             console.print()
             continue
 

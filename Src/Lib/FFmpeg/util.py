@@ -2,9 +2,10 @@
 
 # Class
 from Src.Util.console import console
+from Src.Util.i18n import t
 
 # Import
-import ffmpeg 
+import ffmpeg
 
 # Variable
 
@@ -16,7 +17,7 @@ def get_video_duration(file_path):
         duration = float(probe['format']['duration'])
         return duration
     except ffmpeg.Error as e:
-        print(f"Errore: {e.stderr}")
+        print(t("duration.error", error=e.stderr))
         return None
 
 def format_duration(seconds):
@@ -29,4 +30,4 @@ def print_duration_table(file_path):
 
     if video_duration is not None:
         hours, minutes, seconds = format_duration(video_duration)
-        console.log(f"[muted]Durata[/] [value]'{file_path}'[/]: [accent]{int(hours)}h {int(minutes)}m {int(seconds)}s[/]")
+        console.log(f"[muted]{t('duration.label')}[/] [value]'{file_path}'[/]: [accent]{int(hours)}h {int(minutes)}m {int(seconds)}s[/]")

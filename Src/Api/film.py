@@ -3,6 +3,7 @@
 # Class import
 from Src.Util.headers import get_headers
 from Src.Util.console import console
+from Src.Util.i18n import t
 from Src.Lib.FFmpeg.my_m3u8 import download_m3u8
 
 # General import
@@ -32,11 +33,11 @@ def get_iframe(id_title, title_slug, domain):
             embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
             return embed_script, url_embed
         except:
-            console.log("[error]Impossibile riprodurre questo video (non disponibile)[/]")
+            console.log(f"[error]{t('film.unavailable')}[/]")
             sys.exit(0)
 
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def get_master_playlist_url(embed_script, url_embed):
@@ -70,7 +71,7 @@ def get_master_playlist(embed_script, url_embed):
     if req.ok:
         return req.text
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 def select_video_audio(m3u8_playlist):
@@ -93,7 +94,7 @@ def select_video_audio(m3u8_playlist):
                 video_candidates.append((int(bandwidth_match.group(1)) if bandwidth_match else 0, uri))
 
     if not video_candidates:
-        console.log("[error]Impossibile trovare una qualita' video valida nella playlist[/]")
+        console.log(f"[error]{t('tv.no_valid_video')}[/]")
         sys.exit(0)
 
     video_url = max(video_candidates, key=lambda x: x[0])[1]
@@ -107,7 +108,7 @@ def get_m3u8_key(url_embed):
     if req.ok:
         return "".join(["{:02x}".format(c) for c in req.content])
     else:
-        console.log(f"[error]Errore: {req.status_code}[/]")
+        console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
 
 
@@ -124,6 +125,6 @@ def main_dw_film(id_film, title_name, domain):
     mp4_path = os.path.join("downloads", "film", mp4_name, mp4_format)
 
     if m3u8_url_audio != None:
-        console.print("[info]Uso traccia audio m3u8:[/] [success]si[/]")
+        console.print(f"[info]{t('tv.audio_track_used')}[/] [success]{t('common.yes')}[/]")
 
     download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path)

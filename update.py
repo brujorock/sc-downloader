@@ -6,8 +6,10 @@ from zipfile import ZipFile
 from io import BytesIO
 from rich.console import Console
 from Src.Util.theme import THEME
+from Src.Util.i18n import t, load_language
 
 # Variable
+load_language()
 console = Console(theme=THEME)
 local_path = os.path.join(".")
 
@@ -30,7 +32,7 @@ def move_content(source, destination):
 def keep_specific_items(directory, keep_folder, keep_file):
     try:
         if not os.path.exists(directory) or not os.path.isdir(directory):
-            raise ValueError(f"Errore: '{directory}' non e' una directory valida.")
+            raise ValueError(t("upload.invalid_dir", dir=directory))
 
         # Iterate through items in the directory
         for item in os.listdir(directory):
@@ -43,22 +45,22 @@ def keep_specific_items(directory, keep_folder, keep_file):
                 os.remove(item_path)
 
     except PermissionError as pe:
-        print(f"Errore di permessi: {pe}. Controlla i permessi e prova a eseguire lo script come amministratore.")
+        print(t("upload.permission_error", error=pe))
     except Exception as e:
-        print(f"Errore: {e}")
+        print(t("upload.generic_error", error=e))
 
 def download_and_extract_latest_commit(author, repo_name):
 
     # Get the latest commit information using GitHub API
     api_url = f'https://api.github.com/repos/{author}/{repo_name}/commits?per_page=1'
     response = requests.get(api_url)
-    console.log("[info]Richiesta al repository github in corso[/]")
+    console.log(f"[info]{t('upload.requesting_repo')}[/]")
 
     if response.status_code == 200:
         commit_info = response.json()[0]
         commit_sha = commit_info['sha']
         zipball_url = f'https://github.com/{author}/{repo_name}/archive/{commit_sha}.zip'
-        console.log("[info]Recupero del file zip dal repository[/]")
+        console.log(f"[info]{t('upload.fetching_zip')}[/]")
 
         # Download the zipball
         response = requests.get(zipball_url)
@@ -67,7 +69,7 @@ def download_and_extract_latest_commit(author, repo_name):
         temp_path = os.path.join(os.path.dirname(os.getcwd()), 'temp_extracted')
         with ZipFile(BytesIO(response.content)) as zip_ref:
             zip_ref.extractall(temp_path)
-        console.log("[info]Estrazione dei file in corso...[/]")
+        console.log(f"[info]{t('upload.extracting')}[/]")
 
 
         # Move files from the temporary folder to the current folder
@@ -86,9 +88,9 @@ def download_and_extract_latest_commit(author, repo_name):
         # Remove old temp folder
         shutil.rmtree(new_folder_name)
 
-        console.log("[success]Ultimo commit scaricato ed estratto con successo.[/]")
+        console.log(f"[success]{t('upload.commit_success')}[/]")
     else:
-        console.log(f"[error]Recupero informazioni sul commit non riuscito. Codice di stato: {response.status_code}[/]")
+        console.log(f"[error]{t('upload.commit_fail', status=response.status_code)}[/]")
 
 def main_upload():
 

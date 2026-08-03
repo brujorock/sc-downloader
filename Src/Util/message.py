@@ -2,6 +2,7 @@
 
 # Import
 from Src.Util.console import console
+from Src.Upload.__version__ import __version__
 
 def msg_start():
 
@@ -15,5 +16,5 @@ def msg_start():
 """
 
     console.print(logo, style="brand", justify="center")
-    console.print("Streaming Community Downloader by BarbieGirl♥", style="muted", justify="center")
+    console.print(f"Streaming Community Downloader by BarbieGirl♥ - V {__version__}", style="muted", justify="center")
     console.print()
