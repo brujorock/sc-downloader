@@ -1,4 +1,3 @@
-# 10.12.23 -> 31.01.24
 
 # Class
 import Src.Api.page as Page
