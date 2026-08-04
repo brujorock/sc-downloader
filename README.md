@@ -17,7 +17,17 @@ Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make s
   - **Linux**: install via your distribution's package manager, e.g. `sudo apt install ffmpeg`.
 
 ## Installation
-Install the required Python libraries using the following command:
+Create a virtual environment and install the required Python libraries into it, rather than system-wide:
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+- **Windows**: `.venv\Scripts\activate`
+- **macOS/Linux**: `source .venv/bin/activate`
+
+Then install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
