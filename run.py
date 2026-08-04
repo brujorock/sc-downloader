@@ -272,12 +272,13 @@ def main():
     # my_m3u8.py), so there's nothing left here that needs a blanket wipe.
     msg_start()
     check_for_update()
-    console.print()
 
     if not Page.is_domain_configured():
         check_ffmpeg()
         console.print()
         Page.first_run_setup()
+    else:
+        console.print()
 
     while True:
         show_menu()

@@ -82,7 +82,7 @@ def show_linux_instructions():
 
 def check_ffmpeg():
 
-    console.print(f"[info]{t('ffmpeg.checking')}[/]", end="")
+    console.print(f"[muted]{t('ffmpeg.checking')}[/]", end="")
 
     try:
         subprocess.run(["ffmpeg", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
