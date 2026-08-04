@@ -26,10 +26,9 @@ def get_iframe(id_title, title_slug, domain):
     })
 
     if req.ok:
-        url_embed = BeautifulSoup(req.text, "lxml").find("iframe").get("src")
-        req_embed = session.get(url_embed, headers = {"user-agent": get_headers(), "referer": title_url}).text
-
         try:
+            url_embed = BeautifulSoup(req.text, "lxml").find("iframe").get("src")
+            req_embed = session.get(url_embed, headers = {"user-agent": get_headers(), "referer": title_url}).text
             embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
             return embed_script, url_embed
         except:

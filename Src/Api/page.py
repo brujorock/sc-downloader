@@ -98,9 +98,16 @@ def search(title_search, domain):
     req = requests.get(f"https://{domain}/it/search", params={'q': title_search}, headers={'user-agent': get_headers()})
 
     if req.ok:
-        soup = BeautifulSoup(req.text, "lxml")
-        data_page = json.loads(soup.find("div", {"id": "app"}).get("data-page"))
-        titles = data_page['props']['titles']
+        try:
+            soup = BeautifulSoup(req.text, "lxml")
+            data_page = json.loads(soup.find("div", {"id": "app"}).get("data-page"))
+            titles = data_page['props']['titles']
+        except Exception:
+            # Unexpected page (e.g. a challenge/error page served with a 200
+            # status): treat it the same as "no results" so the search prompt
+            # just re-asks instead of crashing the whole app.
+            return []
+
         results = []
         for title in titles:
             release_date = title.get('last_air_date_it') or title.get('last_air_date')

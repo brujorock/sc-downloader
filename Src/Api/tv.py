@@ -53,10 +53,15 @@ def get_iframe(tv_id, ep_id, domain, token):
     })
 
     if req.ok:
-        url_embed = BeautifulSoup(req.text, "lxml").find("iframe").get("src")
-        req_embed = requests.get(url_embed, headers = {"User-agent": get_headers()}).text
-        embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
-        return embed_script, url_embed
+        try:
+            url_embed = BeautifulSoup(req.text, "lxml").find("iframe").get("src")
+            req_embed = requests.get(url_embed, headers = {"User-agent": get_headers()}).text
+            embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
+            return embed_script, url_embed
+        except:
+            console.log(f"[error]{t('film.unavailable')}[/]")
+            sys.exit(0)
+
     else:
         console.log(f"[error]{t('error.generic', status=req.status_code)}[/]")
         sys.exit(0)
