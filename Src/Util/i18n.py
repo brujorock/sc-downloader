@@ -75,7 +75,8 @@ TRANSLATIONS = {
         "about.text3": "[warning]Anyone using it to download copyrighted or otherwise illegal material assumes full responsibility for doing so.[/]",
 
         # domain
-        "domain.prompt": "Enter the full domain (e.g. streamingcommunity.report): ",
+        "domain.prompt": "Enter the full domain (e.g. sc-new-domain.something): ",
+        "domain.hint": "Don't know where to find the updated domain? Try searching Google for \"streaming community domain\"",
         "domain.empty": "Empty domain, try again.",
         "domain.testing": "Testing domain:",
         "domain.working": "Working domain:",
@@ -256,7 +257,8 @@ TRANSLATIONS = {
         "about.text2": "[info]Non ha fini di lucro e puo' essere scaricato, modificato e utilizzato da chiunque.[/]",
         "about.text3": "[warning]Chi lo utilizza per scaricare materiale protetto da copyright o comunque illegale se ne assume la piena responsabilita'.[/]",
 
-        "domain.prompt": "Inserisci il dominio completo (es. streamingcommunity.report): ",
+        "domain.prompt": "Inserisci il dominio completo (es. sc-new-domain.something): ",
+        "domain.hint": "Non sai dove trovare il dominio aggiornato? Prova a cercare su Google \"streaming community domain\"",
         "domain.empty": "Dominio vuoto, riprova.",
         "domain.testing": "Test dominio:",
         "domain.working": "Dominio funzionante:",
@@ -428,7 +430,8 @@ TRANSLATIONS = {
         "about.text2": "[info]No tiene fines de lucro y puede ser descargado, modificado y utilizado por cualquiera.[/]",
         "about.text3": "[warning]Quien lo utilice para descargar material protegido por derechos de autor o ilegal asume toda la responsabilidad.[/]",
 
-        "domain.prompt": "Introduce el dominio completo (ej. streamingcommunity.report): ",
+        "domain.prompt": "Introduce el dominio completo (ej. sc-new-domain.something): ",
+        "domain.hint": "¿No sabes donde encontrar el dominio actualizado? Prueba a buscar en Google \"streaming community domain\"",
         "domain.empty": "Dominio vacio, intentalo de nuevo.",
         "domain.testing": "Probando dominio:",
         "domain.working": "Dominio funcionando:",

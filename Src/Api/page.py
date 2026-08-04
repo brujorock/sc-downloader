@@ -25,6 +25,8 @@ def test_domain(domain):
 def ask_new_domain():
     """Ask the user for a domain and keep asking until one actually responds."""
 
+    console.print(f"[muted]{t('domain.hint')}[/]")
+
     while True:
         domain = console.input(f"[prompt]{t('domain.prompt')}[/]").strip()
         domain = domain.replace("https://", "").replace("http://", "").rstrip("/")
