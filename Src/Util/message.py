@@ -16,5 +16,5 @@ def msg_start():
 """
 
     console.print(logo, style="brand", justify="center")
-    console.print(f"Streaming Community Downloader by BarbieGirl♥ - V {__version__}", style="muted", justify="center")
+    console.print(f"SCDownloader by BarbieGirl♥ - V {__version__}", style="muted", justify="center")
     console.print()

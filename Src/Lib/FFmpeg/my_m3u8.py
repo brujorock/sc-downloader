@@ -4,7 +4,7 @@
 from Src.Util.console import console
 from Src.Util.headers import get_headers
 from Src.Util.i18n import t
-from Src.Lib.FFmpeg.util import print_duration_table
+from Src.Lib.FFmpeg.util import print_duration_table, durations_compatible, format_duration
 
 # Import
 from m3u8 import M3U8 as M3U8_Lib
@@ -378,7 +378,7 @@ class M3U8_Downloader:
         video_m3u8.get_info()
         video_m3u8.download_ts()
         video_m3u8.join(self.video_path)
-        print_duration_table(self.video_path)
+        video_duration = print_duration_table(self.video_path)
         console.print()
 
         if self.m3u8_audio != None:
@@ -387,10 +387,26 @@ class M3U8_Downloader:
             audio_m3u8.get_info()
             audio_m3u8.download_ts()
             audio_m3u8.join(self.audio_path)
-            print_duration_table(self.audio_path)
+            audio_duration = print_duration_table(self.audio_path)
             console.print()
 
+            if not durations_compatible(video_duration, audio_duration):
+                video_label = "?" if video_duration is None else "{}h {}m {}s".format(*format_duration(video_duration))
+                audio_label = "?" if audio_duration is None else "{}h {}m {}s".format(*format_duration(audio_duration))
+
+                console.print()
+                console.rule(f"[error]{t('m3u8.sync_mismatch_title')}[/]", style="error")
+                console.print(f"[error]{t('m3u8.sync_mismatch_body', video=video_label, audio=audio_label)}[/]")
+                console.rule(style="error")
+                console.print()
+
+                os.remove(self.video_path)
+                os.remove(self.audio_path)
+                sys.exit(0)
+
             self.join_audio()
+        else:
+            console.print(f"[success]{t('m3u8.merge_success')}[/]")
 
     def join_audio(self):
         """Join audio with video and sync it"""
@@ -431,6 +447,7 @@ class M3U8_Downloader:
             console.log(f"[warning]{t('m3u8.merge_kept_raw', video=self.video_path, audio=self.audio_path)}[/]")
             if os.path.exists(merged_path):
                 os.remove(merged_path)
+            sys.exit(0)
 
 
 # [ main function ]

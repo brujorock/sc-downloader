@@ -29,7 +29,7 @@ TRANSLATIONS = {
         "menu.option.download": "Download a movie or TV series",
         "menu.option.settings": "Settings",
         "menu.option.history": "Search & download history",
-        "menu.option.about": "About SCD",
+        "menu.option.about": "About SCDownloader",
         "menu.choose_option": "Choose an option",
         "menu.invalid_option": "Invalid option.",
 
@@ -52,6 +52,10 @@ TRANSLATIONS = {
         "download.movie_selected": "Selected movie:",
         "download.tv_selected": "Selected TV series:",
         "download.completed": "Completed.",
+        "download.summary_title": "Download summary",
+        "download.status.success": "Downloaded",
+        "download.status.failed": "Not downloaded",
+        "download.retry_prompt": "Do you want to retry downloading the titles that failed?",
 
         # settings
         "settings.title": "Settings",
@@ -63,8 +67,8 @@ TRANSLATIONS = {
         "settings.language.saved": "Language saved",
 
         # about
-        "about.title": "About SCD",
-        "about.text1": "[info]Streaming Community Downloader was created by[/] [value]BarbieGirl♥[/] [info]in 2026, for purely educational purposes.[/]",
+        "about.title": "About SCDownloader",
+        "about.text1": "[info]SCDownloader was created by[/] [value]BarbieGirl♥[/] [info]in 2026, for purely educational purposes.[/]",
         "about.text2": "[info]It is non-profit and can be downloaded, modified and used by anyone.[/]",
         "about.text3": "[warning]Anyone using it to download copyrighted or otherwise illegal material assumes full responsibility for doing so.[/]",
 
@@ -126,7 +130,9 @@ TRANSLATIONS = {
         "m3u8.cleaning": "Cleaning up...",
         "m3u8.download_video": "Downloading video segments",
         "m3u8.download_audio": "Downloading audio segments",
-        "m3u8.merge_success": "Merge completed successfully.",
+        "m3u8.merge_success": "Video file created successfully.",
+        "m3u8.sync_mismatch_title": "WARNING: audio and video out of sync",
+        "m3u8.sync_mismatch_body": "Video duration ({video}) and audio duration ({audio}) don't match closely enough — they're likely from different sources. Discarding this download.",
         "m3u8.merge_error": "Error merging audio/video: {error}",
         "m3u8.merge_kept_raw": "Raw video and audio kept at: {video} , {audio}",
         "m3u8.invalid_url": "Invalid URL, error: {status}",
@@ -197,7 +203,7 @@ TRANSLATIONS = {
         "menu.option.download": "Scarica film o serie TV",
         "menu.option.settings": "Impostazioni",
         "menu.option.history": "Cronologia ricerche e download",
-        "menu.option.about": "About SCD",
+        "menu.option.about": "About SCDownloader",
         "menu.choose_option": "Seleziona un'opzione",
         "menu.invalid_option": "Opzione non valida.",
 
@@ -219,6 +225,10 @@ TRANSLATIONS = {
         "download.movie_selected": "Film selezionato:",
         "download.tv_selected": "Serie TV selezionata:",
         "download.completed": "Completato.",
+        "download.summary_title": "Riepilogo download",
+        "download.status.success": "Scaricato",
+        "download.status.failed": "Non scaricato",
+        "download.retry_prompt": "Vuoi riprovare a scaricare i titoli andati in errore?",
 
         "settings.title": "Impostazioni",
         "settings.menu.domain": "Dominio",
@@ -228,8 +238,8 @@ TRANSLATIONS = {
         "settings.language.prompt": "Scegli una lingua",
         "settings.language.saved": "Lingua salvata",
 
-        "about.title": "About SCD",
-        "about.text1": "[info]Streaming Community Downloader e' stato creato da[/] [value]BarbieGirl♥[/] [info]nel 2026, per puro scopo didattico.[/]",
+        "about.title": "About SCDownloader",
+        "about.text1": "[info]SCDownloader e' stato creato da[/] [value]BarbieGirl♥[/] [info]nel 2026, per puro scopo didattico.[/]",
         "about.text2": "[info]Non ha fini di lucro e puo' essere scaricato, modificato e utilizzato da chiunque.[/]",
         "about.text3": "[warning]Chi lo utilizza per scaricare materiale protetto da copyright o comunque illegale se ne assume la piena responsabilita'.[/]",
 
@@ -286,7 +296,9 @@ TRANSLATIONS = {
         "m3u8.cleaning": "Pulizia in corso...",
         "m3u8.download_video": "Download segmenti video",
         "m3u8.download_audio": "Download segmenti audio",
-        "m3u8.merge_success": "Unione completata con successo.",
+        "m3u8.merge_success": "File video creato con successo.",
+        "m3u8.sync_mismatch_title": "ATTENZIONE: audio e video non sincronizzati",
+        "m3u8.sync_mismatch_body": "La durata del video ({video}) e quella dell'audio ({audio}) non corrispondono a sufficienza — probabilmente provengono da fonti diverse. Download scartato.",
         "m3u8.merge_error": "Errore nell'unione audio/video: {error}",
         "m3u8.merge_kept_raw": "Video e audio grezzi mantenuti in: {video} , {audio}",
         "m3u8.invalid_url": "Url non valido, errore: {status}",
@@ -352,7 +364,7 @@ TRANSLATIONS = {
         "menu.option.download": "Descargar una pelicula o serie de TV",
         "menu.option.settings": "Ajustes",
         "menu.option.history": "Historial de busquedas y descargas",
-        "menu.option.about": "Acerca de SCD",
+        "menu.option.about": "Acerca de SCDownloader",
         "menu.choose_option": "Elige una opcion",
         "menu.invalid_option": "Opcion no valida.",
 
@@ -374,6 +386,10 @@ TRANSLATIONS = {
         "download.movie_selected": "Pelicula seleccionada:",
         "download.tv_selected": "Serie de TV seleccionada:",
         "download.completed": "Completado.",
+        "download.summary_title": "Resumen de descargas",
+        "download.status.success": "Descargado",
+        "download.status.failed": "No descargado",
+        "download.retry_prompt": "¿Quieres reintentar descargar los titulos que fallaron?",
 
         "settings.title": "Ajustes",
         "settings.menu.domain": "Dominio",
@@ -383,8 +399,8 @@ TRANSLATIONS = {
         "settings.language.prompt": "Elige un idioma",
         "settings.language.saved": "Idioma guardado",
 
-        "about.title": "Acerca de SCD",
-        "about.text1": "[info]Streaming Community Downloader fue creado por[/] [value]BarbieGirl♥[/] [info]en 2026, con fines puramente educativos.[/]",
+        "about.title": "Acerca de SCDownloader",
+        "about.text1": "[info]SCDownloader fue creado por[/] [value]BarbieGirl♥[/] [info]en 2026, con fines puramente educativos.[/]",
         "about.text2": "[info]No tiene fines de lucro y puede ser descargado, modificado y utilizado por cualquiera.[/]",
         "about.text3": "[warning]Quien lo utilice para descargar material protegido por derechos de autor o ilegal asume toda la responsabilidad.[/]",
 
@@ -441,7 +457,9 @@ TRANSLATIONS = {
         "m3u8.cleaning": "Limpiando...",
         "m3u8.download_video": "Descargando segmentos de video",
         "m3u8.download_audio": "Descargando segmentos de audio",
-        "m3u8.merge_success": "Union completada con exito.",
+        "m3u8.merge_success": "Archivo de video creado con exito.",
+        "m3u8.sync_mismatch_title": "ATENCION: audio y video desincronizados",
+        "m3u8.sync_mismatch_body": "La duracion del video ({video}) y la del audio ({audio}) no coinciden lo suficiente — probablemente provienen de fuentes distintas. Descartando esta descarga.",
         "m3u8.merge_error": "Error al unir audio/video: {error}",
         "m3u8.merge_kept_raw": "Video y audio en bruto conservados en: {video} , {audio}",
         "m3u8.invalid_url": "URL no valida, error: {status}",

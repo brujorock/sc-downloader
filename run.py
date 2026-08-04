@@ -13,6 +13,7 @@ from Src.Lib.FFmpeg.installer import check_ffmpeg
 # Import
 import sys
 from rich.table import Table
+from rich.prompt import Confirm
 
 try:
     import msvcrt
@@ -66,25 +67,55 @@ def download_flow():
             console.print()
             continue
 
-        for n in selected_indexes:
-            selected_title = db_title[n - 1]
-
-            console.print()
-            console.rule(style="muted")
-
-            if selected_title['type'] == "movie":
-                console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
-                download_film(selected_title['id'], selected_title['slug'], domain)
-                add_download(selected_title['name'])
-            else:
-                console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
-                completed = download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
-                if completed:
-                    add_download(selected_title['name'])
-
-        console.print()
-        console.print(f"[success]{t('download.completed')}[/]")
+        queue = [db_title[n - 1] for n in selected_indexes]
+        run_download_queue(queue, domain, site_version)
         return
+
+def download_title(selected_title, domain, site_version):
+    """Download a single title. Returns True on success, False on cancel/failure."""
+
+    console.print()
+    console.rule(style="muted")
+
+    try:
+        if selected_title['type'] == "movie":
+            console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
+            download_film(selected_title['id'], selected_title['slug'], domain)
+            success = True
+        else:
+            console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
+            success = download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
+    except SystemExit:
+        # Anything in the download pipeline (bad m3u8, network error, audio/video
+        # out of sync, ...) bails out via sys.exit(0). Catching it here means one
+        # bad title doesn't take down the rest of the queue.
+        success = False
+
+    if success:
+        add_download(selected_title['name'])
+
+    return success
+
+def run_download_queue(queue, domain, site_version):
+    results = [(title, download_title(title, domain, site_version)) for title in queue]
+
+    console.print()
+    console.rule(f"[title]{t('download.summary_title')}[/]", style="muted")
+    for title, success in results:
+        if success:
+            console.print(f"[value]{title['name']}[/] [success]✓ {t('download.status.success')}[/]")
+        else:
+            console.print(f"[value]{title['name']}[/] [error]✗ {t('download.status.failed')}[/]")
+
+    failed = [title for title, success in results if not success]
+    if failed:
+        console.print()
+        if Confirm.ask(f"[prompt]{t('download.retry_prompt')}[/]", default=True, console=console):
+            run_download_queue(failed, domain, site_version)
+            return
+
+    console.print()
+    console.print(f"[success]{t('download.completed')}[/]")
 
 def language_flow():
     console.print(f"[info]{t('settings.language.current')}:[/] [value]{LANGUAGE_NAMES[get_language()]}[/]")

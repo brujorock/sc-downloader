@@ -1,7 +1,9 @@
 ## SCDownloader by BarbieGirl♥
 
 ## Overview
-This repository provides a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
+This repository provides a simple script designed to facilitate the downloading of movies, anime, and TV series from a popular streaming community platform. The script allows users to download individual titles, entire series, or specific episodes, providing a seamless experience for content consumers.
+
+It's handy for entertainment, but also for people learning Italian: you can download Italian-language titles with subtitles available in Italian, English, or Spanish.
 
 ## Requirements
 Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make sure you have the following prerequisites installed on your system:
@@ -30,7 +32,7 @@ You'll get an interactive menu:
 1. **Download a movie or TV series** — search and download (requires a domain to be configured first, see option 2).
 2. **Settings** — configure the streaming domain and the interface language.
 3. **Search & download history** — browse your most recent searches and completed downloads.
-4. **About SCD** — info about the project.
+4. **About SCDownloader** — info about the project.
 
 ## Language
 The app is available in **English** (default), **Italian**, and **Spanish**. Change it anytime from `Settings -> Language` — the switch applies immediately and is remembered for future runs.
@@ -46,11 +48,13 @@ python update.py
 
 - Download Specific Episodes or Entire Series: Seamlessly retrieve specific episodes or entire series using intuitive commands. Specify a range of episodes with square brackets notation, e.g., [5-7], or download all episodes with an asterisk (*).
 
-- Sync Audio and Video: Ensure perfect synchronization between audio and video during the download process for an enhanced viewing experience.
+- Audio/video sync check: after a video and its audio track are downloaded, their durations are compared. If they don't match closely enough (likely mismatched sources), the download is discarded instead of producing an out-of-sync file.
 
 - Subtitles: automatically downloads Italian, English and Spanish subtitles (when available), skipping every other language.
 
 - Resilient downloads: failed segments are retried automatically with backoff, and you're warned clearly if a download ends up incomplete after all attempts.
+
+- Download summary: after processing your selection, you get a list of every title with a ✓/✗ status. If anything failed, you're offered the chance to retry just those titles.
 
 - Output layout: films go to `downloads/film/[movie name]/`, with subtitles in a `subtitle/` subfolder next to the video. TV episodes go to `downloads/tv/[show name]/`.
 
