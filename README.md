@@ -6,10 +6,13 @@ This repository provides a simple script designed to facilitate the downloading 
 This is a fork of the original [Streaming Community downloader](https://github.com/Ghost6446/StreamingCommunity_api), rewritten with an interactive menu, multi-language support, and a Barbie-themed CLI.
 
 ## Requirements
-Make sure you have the following prerequisites installed on your system:
+Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make sure you have the following prerequisites installed on your system:
 
 * python > [3.11](https://www.python.org/downloads/)
-* ffmpeg [win](https://www.gyan.dev/ffmpeg/builds/)
+* ffmpeg:
+  - **Windows**: if it's missing, the app offers to download and install it automatically on first run.
+  - **macOS**: install via [Homebrew](https://brew.sh) — `brew install ffmpeg`. If the app doesn't find it, it will print these exact instructions (including how to install Homebrew itself if needed) and how to install ffmpeg.
+  - **Linux**: install via your distribution's package manager, e.g. `sudo apt install ffmpeg`.
 
 ## Installation
 Install the required Python libraries using the following command:
@@ -18,7 +21,8 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Double-click `SCDownloader.bat` (Windows) to launch the app — it runs the venv's Python automatically, no manual activation needed.
+- **Windows**: double-click `SCDownloader.bat` to launch the app — it runs the venv's Python automatically, no manual activation needed.
+- **macOS/Linux**: double-click `SCDownloader.command` (or run `./SCDownloader.command` from Terminal) for the same one-click experience.
 
 Or run it manually with the venv activated:
 ```python
@@ -27,7 +31,8 @@ python run.py
 You'll get an interactive menu:
 1. **Download a movie or TV series** — search and download (requires a domain to be configured first, see option 2).
 2. **Settings** — configure the streaming domain and the interface language.
-3. **About SCD** — info about the project.
+3. **Search & download history** — browse your most recent searches and completed downloads.
+4. **About SCD** — info about the project.
 
 ## Language
 The app is available in **English** (default), **Italian**, and **Spanish**. Change it anytime from `Settings -> Language` — the switch applies immediately and is remembered for future runs.

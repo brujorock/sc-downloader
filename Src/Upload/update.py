@@ -11,7 +11,6 @@ import os, requests, time
 repo_name = "sc-downloader"
 repo_user = "brujorock"
 main = os.path.abspath(os.path.dirname(__file__))
-base = "\\".join(main.split("\\")[:-1])
 
 def get_install_version():
     about = {}
