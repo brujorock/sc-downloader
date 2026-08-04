@@ -72,42 +72,84 @@ def download_flow():
         return
 
 def download_title(selected_title, domain, site_version):
-    """Download a single title. Returns True on success, False on cancel/failure."""
+    """Download a single title.
+
+    Returns a result dict:
+      - movies: {"type": "movie", "title": ..., "success": bool}
+      - TV shows: {"type": "tv", "title": ..., "episodes": [{"season", "episode", "name", "success"}, ...]}
+    """
 
     console.print()
     console.rule(style="muted")
 
-    try:
-        if selected_title['type'] == "movie":
+    if selected_title['type'] == "movie":
+        try:
             console.print(f"[title]{t('download.movie_selected')}[/] [value]{selected_title['name']}[/]")
             download_film(selected_title['id'], selected_title['slug'], domain)
             success = True
-        else:
-            console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
-            success = download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
-    except SystemExit:
-        # Anything in the download pipeline (bad m3u8, network error, audio/video
-        # out of sync, ...) bails out via sys.exit(0). Catching it here means one
-        # bad title doesn't take down the rest of the queue.
-        success = False
+        except SystemExit:
+            # Anything in the download pipeline (bad m3u8, network error, audio/video
+            # out of sync, ...) bails out via sys.exit(0). Catching it here means one
+            # bad title doesn't take down the rest of the queue.
+            success = False
 
-    if success:
+        if success:
+            add_download(selected_title['name'])
+
+        return {"type": "movie", "title": selected_title, "success": success}
+
+    console.print(f"[title]{t('download.tv_selected')}[/] [value]{selected_title['name']}[/]")
+    try:
+        episodes = download_tv(selected_title['id'], selected_title['slug'], site_version, domain)
+    except SystemExit:
+        # A failure before/between episodes (e.g. can't list seasons) rather
+        # than within a single episode (those are already caught per-episode).
+        episodes = []
+
+    if any(ep["success"] for ep in episodes):
         add_download(selected_title['name'])
 
-    return success
+    return {"type": "tv", "title": selected_title, "episodes": episodes}
+
+def is_fully_successful(result):
+    if result["type"] == "movie":
+        return result["success"]
+    return bool(result["episodes"]) and all(ep["success"] for ep in result["episodes"])
 
 def run_download_queue(queue, domain, site_version):
-    results = [(title, download_title(title, domain, site_version)) for title in queue]
+    results = [download_title(title, domain, site_version) for title in queue]
 
     console.print()
     console.rule(f"[title]{t('download.summary_title')}[/]", style="muted")
-    for title, success in results:
-        if success:
-            console.print(f"[value]{title['name']}[/] [success]✓ {t('download.status.success')}[/]")
-        else:
-            console.print(f"[value]{title['name']}[/] [error]✗ {t('download.status.failed')}[/]")
+    for result in results:
+        name = result["title"]["name"]
 
-    failed = [title for title, success in results if not success]
+        if result["type"] == "movie":
+            if result["success"]:
+                console.print(f"[value]{name}[/] [success]✓ {t('download.status.success')}[/]")
+            else:
+                console.print(f"[value]{name}[/] [error]✗ {t('download.status.failed')}[/]")
+            continue
+
+        episodes = result["episodes"]
+        succeeded = sum(1 for ep in episodes if ep["success"])
+        total = len(episodes)
+
+        if total == 0 or succeeded == 0:
+            counter_style = "error"
+        elif succeeded == total:
+            counter_style = "value"
+        else:
+            counter_style = "warning"
+
+        console.print(f"[value]{name}[/] [{counter_style}][{succeeded}/{total}][/]")
+        for ep in episodes:
+            if ep["success"]:
+                console.print(f"S{ep['season']} E{ep['episode']} - {ep['name']} [success]✓ {t('download.status.success')}[/]")
+            else:
+                console.print(f"S{ep['season']} E{ep['episode']} - {ep['name']} [error]✗ {t('download.status.failed')}[/]")
+
+    failed = [result["title"] for result in results if not is_fully_successful(result)]
     if failed:
         console.print()
         if Confirm.ask(f"[prompt]{t('download.retry_prompt')}[/]", default=True, console=console):

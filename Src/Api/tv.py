@@ -139,9 +139,10 @@ def get_m3u8_key(url_embed):
 
 
 # [func \ main]
-def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_select):
+def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_select, position=None, total=None):
 
-    console.print(f"[title]{t('tv.download_episode')}[/] [value]{eps[index_ep_select]['n']} - {eps[index_ep_select]['name']}[/]")
+    counter = f" [muted][{position}/{total}][/]" if position and total else ""
+    console.print(f"[title]{t('tv.download_episode')}[/] [value]{eps[index_ep_select]['n']} - {eps[index_ep_select]['name']}[/]{counter}")
     embed_script, url_embed = get_iframe(tv_id, eps[index_ep_select]['id'], domain, token)
     m3u8_playlist = get_master_playlist(embed_script, url_embed)
     m3u8_url, m3u8_url_audio = select_video_audio(m3u8_playlist)
@@ -156,8 +157,33 @@ def dw_single_ep(tv_id, eps, index_ep_select, domain, token, tv_name, season_sel
 
     download_m3u8(m3u8_index=m3u8_url, m3u8_audio=m3u8_url_audio, m3u8_subtitle=m3u8_playlist, key=m3u8_key, output_filename=mp4_path, subtitle_prefix=mp4_name)
 
+def download_episode_batch(tv_id, eps, eps_to_download, domain, token, tv_name, season_select):
+    """Download a list of episodes (1-based numbers into `eps`), one at a time.
+
+    Each episode is caught individually so one failure doesn't stop the rest
+    of the batch. Returns a list of per-episode results.
+    """
+
+    total = len(eps_to_download)
+    results = []
+
+    for position, ep_index in enumerate(eps_to_download, start=1):
+        console.print()
+        console.rule(style="muted")
+        ep = eps[ep_index - 1]
+
+        try:
+            dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select, position, total)
+            success = True
+        except SystemExit:
+            success = False
+
+        results.append({"season": season_select, "episode": ep['n'], "name": ep['name'], "success": success})
+
+    return results
+
 def main_dw_tv(tv_id, tv_name, version, domain):
-    """Returns True if at least one episode was actually downloaded, False if the user canceled out."""
+    """Returns a list of per-episode results: [{"season", "episode", "name", "success"}, ...] (empty if canceled before downloading anything)."""
 
     token = get_token(tv_id, domain)
 
@@ -172,7 +198,7 @@ def main_dw_tv(tv_id, tv_name, version, domain):
         seasons_to_download = ask_selection(f"[prompt]{t('tv.season_prompt')}[/]", num_season_find)
 
         if seasons_to_download is None:
-            return False
+            return []
 
         if len(seasons_to_download) == 1:
             # A single season was picked: let the user choose which episodes.
@@ -195,22 +221,14 @@ def main_dw_tv(tv_id, tv_name, version, domain):
                 console.print()
                 continue
 
-            for ep_index in eps_to_download:
-                console.print()
-                console.rule(style="muted")
-                dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
-
-            return True
+            return download_episode_batch(tv_id, eps, eps_to_download, domain, token, tv_name, season_select)
 
         # Multiple/all seasons were picked: download every episode of each.
+        results = []
         for season_select in seasons_to_download:
             eps = get_info_season(tv_id, tv_name, domain, version, token, season_select)
-            for ep_index in range(1, len(eps) + 1):
-                console.print()
-                console.rule(style="muted")
-                dw_single_ep(tv_id, eps, ep_index - 1, domain, token, tv_name, season_select)
+            eps_to_download = list(range(1, len(eps) + 1))
+            results.extend(download_episode_batch(tv_id, eps, eps_to_download, domain, token, tv_name, season_select))
 
-        return True
-
-        return
+        return results
 
