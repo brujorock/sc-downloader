@@ -7,6 +7,7 @@ from io import BytesIO
 from rich.console import Console
 from Src.Util.theme import THEME
 from Src.Util.i18n import t, load_language
+from Src.Upload.update import get_install_version, get_remote_version
 
 # Variable
 load_language()
@@ -97,10 +98,16 @@ def main_upload():
     repository_owner = 'brujorock'
     repository_name = 'sc-downloader'
 
+    remote_version = get_remote_version()
+    if remote_version is not None and remote_version == get_install_version():
+        console.print(f"[success]{t('upload.already_updated')}[/]")
+        return
+
     # Remove all old files, but keep the user's environment, git history,
-    # downloaded content and local settings (none of these come back from
-    # the repo zip since they're gitignored / not tracked).
-    keep_specific_items(".", [".venv", ".git", "downloads"], ["data.json", "history.json"])
+    # downloaded content, local settings and Claude Code's own local state
+    # (none of these come back from the repo zip since they're gitignored /
+    # not tracked).
+    keep_specific_items(".", [".venv", ".git", "downloads", ".claude"], ["data.json", "history.json"])
 
     download_and_extract_latest_commit(repository_owner, repository_name)
 

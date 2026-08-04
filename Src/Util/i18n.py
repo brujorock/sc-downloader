@@ -187,11 +187,12 @@ TRANSLATIONS = {
         "upload.invalid_dir": "Error: '{dir}' is not a valid directory.",
         "upload.permission_error": "Permission error: {error}. Check permissions and try running the script as administrator.",
         "upload.generic_error": "Error: {error}",
-        "upload.requesting_repo": "Requesting the github repository",
-        "upload.fetching_zip": "Fetching the zip file from the repository",
+        "upload.requesting_repo": "Checking for new updates",
+        "upload.fetching_zip": "Downloading the new update",
         "upload.extracting": "Extracting files...",
-        "upload.commit_success": "Latest commit downloaded and extracted successfully.",
+        "upload.commit_success": "Latest update downloaded and applied successfully.",
         "upload.commit_fail": "Failed to fetch commit information. Status code: {status}",
+        "upload.already_updated": "SCDownloader is already up to date.",
 
         # startup update check
         "startup_update.checking": "Checking for updates...",
@@ -354,11 +355,12 @@ TRANSLATIONS = {
         "upload.invalid_dir": "Errore: '{dir}' non e' una directory valida.",
         "upload.permission_error": "Errore di permessi: {error}. Controlla i permessi e prova a eseguire lo script come amministratore.",
         "upload.generic_error": "Errore: {error}",
-        "upload.requesting_repo": "Richiesta al repository github in corso",
-        "upload.fetching_zip": "Recupero del file zip dal repository",
+        "upload.requesting_repo": "Cerco nuovi aggiornamenti",
+        "upload.fetching_zip": "Scarico il nuovo aggiornamento",
         "upload.extracting": "Estrazione dei file in corso...",
-        "upload.commit_success": "Ultimo commit scaricato ed estratto con successo.",
+        "upload.commit_success": "Ultimo aggiornamento scaricato e applicato con successo.",
         "upload.commit_fail": "Recupero informazioni sul commit non riuscito. Codice di stato: {status}",
+        "upload.already_updated": "SCDownloader e' gia' aggiornato.",
 
         # controllo aggiornamenti all'avvio
         "startup_update.checking": "Controllo aggiornamenti...",
@@ -521,11 +523,12 @@ TRANSLATIONS = {
         "upload.invalid_dir": "Error: '{dir}' no es un directorio valido.",
         "upload.permission_error": "Error de permisos: {error}. Comprueba los permisos e intenta ejecutar el script como administrador.",
         "upload.generic_error": "Error: {error}",
-        "upload.requesting_repo": "Solicitando el repositorio de github",
-        "upload.fetching_zip": "Obteniendo el archivo zip del repositorio",
+        "upload.requesting_repo": "Buscando nuevas actualizaciones",
+        "upload.fetching_zip": "Descargando la nueva actualizacion",
         "upload.extracting": "Extrayendo archivos...",
-        "upload.commit_success": "Ultimo commit descargado y extraido con exito.",
+        "upload.commit_success": "Ultima actualizacion descargada y aplicada con exito.",
         "upload.commit_fail": "No se pudo obtener la informacion del commit. Codigo de estado: {status}",
+        "upload.already_updated": "SCDownloader ya esta actualizado.",
 
         # comprobacion de actualizaciones al inicio
         "startup_update.checking": "Comprobando actualizaciones...",
