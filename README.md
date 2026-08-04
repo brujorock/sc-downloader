@@ -5,6 +5,8 @@ This repository provides a simple script designed to facilitate the downloading 
 
 It's handy for entertainment, but also for people learning Italian: you can download Italian-language titles with subtitles available in Italian, English, or Spanish.
 
+![SCDownloader screenshot](Src/Assets/screen.png)
+
 ## Requirements
 Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make sure you have the following prerequisites installed on your system:
 
