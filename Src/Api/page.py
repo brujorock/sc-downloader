@@ -45,8 +45,6 @@ def ask_new_domain():
 def load_domain():
     """Read-only: load the saved domain and verify it still works. Does not prompt or save. Used by the download flow."""
 
-    console.print(f"[info]{t('domain.loading_rules')}[/]")
-
     try:
         with open('data.json', 'r') as file:
             req_repo = json.load(file)
@@ -59,13 +57,14 @@ def load_domain():
         console.print(f"[error]{t('domain.not_configured')}[/]")
         return None, None
 
-    console.print(f"[info]{t('domain.testing')}[/] [value]{saved_domain}[/]")
+    console.print(f"[info]{t('domain.checking')}[/]", end=" ")
     version = test_domain(saved_domain)
 
     if version:
-        console.print(f"[success]{t('domain.working')}[/] [value]{saved_domain}[/]")
+        console.print(f"[success]✓ {t('domain.check_passed')}[/]")
         return saved_domain, version
 
+    console.print(f"[error]✗ {t('domain.check_failed')}[/]")
     console.print(t("domain.saved_broken", domain=saved_domain))
     return None, None
 
