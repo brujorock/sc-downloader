@@ -197,7 +197,7 @@ TRANSLATIONS = {
         "startup_update.checking": "Checking for updates...",
         "startup_update.up_to_date": "Up to date version",
         "startup_update.available": "New update available",
-        "startup_update.prompt": "Hey, a new update is available! Download the updated version by running the file {file}",
+        "startup_update.prompt": "Download the updated version by running the file {file}",
     },
 
     "it": {
@@ -364,7 +364,7 @@ TRANSLATIONS = {
         "startup_update.checking": "Controllo aggiornamenti...",
         "startup_update.up_to_date": "Versione aggiornata",
         "startup_update.available": "Nuovo aggiornamento disponibile",
-        "startup_update.prompt": "Ehy, c'e' un nuovo aggiornamento disponibile! Scarica la versione aggiornata lanciando il file {file}",
+        "startup_update.prompt": "Scarica la versione aggiornata lanciando il file {file}",
     },
 
     "es": {
@@ -531,7 +531,7 @@ TRANSLATIONS = {
         "startup_update.checking": "Comprobando actualizaciones...",
         "startup_update.up_to_date": "Version actualizada",
         "startup_update.available": "Nueva actualizacion disponible",
-        "startup_update.prompt": "¡Oye, hay una nueva actualizacion disponible! Descarga la version actualizada ejecutando el archivo {file}",
+        "startup_update.prompt": "Descarga la version actualizada ejecutando el archivo {file}",
     },
 }
 
