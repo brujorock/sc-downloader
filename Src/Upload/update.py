@@ -60,10 +60,11 @@ def get_remote_version(timeout=5):
         return None
 
 def check_for_update():
-    console.print(f"[muted]{t('startup_update.checking')}[/]")
+    console.print(f"[muted]{t('startup_update.checking')}[/]", end=" ")
 
     remote_version = get_remote_version()
     if remote_version is None:
+        console.print()
         return
 
     if remote_version == get_install_version():
