@@ -12,7 +12,7 @@ Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make s
 
 * python > [3.11](https://www.python.org/downloads/)
 * ffmpeg:
-  - **Windows**: if it's missing, the app offers to download and install it automatically on first run.
+  - **Windows**: install with `winget install -e --id Gyan.FFmpeg`, or download a build manually from [gyan.dev](https://www.gyan.dev/ffmpeg/builds/) and add its `bin` folder to your PATH. If the app doesn't find it, it will print these exact instructions.
   - **macOS**: install via [Homebrew](https://brew.sh) — `brew install ffmpeg`. If the app doesn't find it, it will print these exact instructions (including how to install Homebrew itself if needed) and how to install ffmpeg.
   - **Linux**: install via your distribution's package manager, e.g. `sudo apt install ffmpeg`.
 
