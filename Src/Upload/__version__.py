@@ -1,5 +1,5 @@
 __title__ = 'SCDownloader'
-__version__ = '1.12'
+__version__ = '1.13'
 __author__ = 'BarbieGirl♥'
 __description__ = 'A command-line program to download film'
 __license__ = 'MIT License'

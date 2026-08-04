@@ -192,6 +192,12 @@ TRANSLATIONS = {
         "upload.extracting": "Extracting files...",
         "upload.commit_success": "Latest commit downloaded and extracted successfully.",
         "upload.commit_fail": "Failed to fetch commit information. Status code: {status}",
+
+        # startup update check
+        "startup_update.checking": "Checking for updates...",
+        "startup_update.up_to_date": "Up to date version",
+        "startup_update.available": "New update available",
+        "startup_update.prompt": "Hey, a new update is available! Download the updated version by running the file {file}",
     },
 
     "it": {
@@ -353,6 +359,12 @@ TRANSLATIONS = {
         "upload.extracting": "Estrazione dei file in corso...",
         "upload.commit_success": "Ultimo commit scaricato ed estratto con successo.",
         "upload.commit_fail": "Recupero informazioni sul commit non riuscito. Codice di stato: {status}",
+
+        # controllo aggiornamenti all'avvio
+        "startup_update.checking": "Controllo aggiornamenti...",
+        "startup_update.up_to_date": "Versione aggiornata",
+        "startup_update.available": "Nuovo aggiornamento disponibile",
+        "startup_update.prompt": "Ehy, c'e' un nuovo aggiornamento disponibile! Scarica la versione aggiornata lanciando il file {file}",
     },
 
     "es": {
@@ -514,6 +526,12 @@ TRANSLATIONS = {
         "upload.extracting": "Extrayendo archivos...",
         "upload.commit_success": "Ultimo commit descargado y extraido con exito.",
         "upload.commit_fail": "No se pudo obtener la informacion del commit. Codigo de estado: {status}",
+
+        # comprobacion de actualizaciones al inicio
+        "startup_update.checking": "Comprobando actualizaciones...",
+        "startup_update.up_to_date": "Version actualizada",
+        "startup_update.available": "Nueva actualizacion disponible",
+        "startup_update.prompt": "¡Oye, hay una nueva actualizacion disponible! Descarga la version actualizada ejecutando el archivo {file}",
     },
 }
 

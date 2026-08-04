@@ -4,6 +4,7 @@ import Src.Api.page as Page
 from Src.Api.film import main_dw_film as download_film
 from Src.Api.tv import main_dw_tv as download_tv
 from Src.Util.message import msg_start
+from Src.Upload.update import check_for_update
 from Src.Util.console import console, msg
 from Src.Util.selection import ask_selection
 from Src.Util.i18n import t, load_language, set_language, get_language, SUPPORTED_LANGUAGES, LANGUAGE_NAMES
@@ -270,6 +271,8 @@ def main():
     # up its own uniquely-named temp folder when it finishes (see join() in
     # my_m3u8.py), so there's nothing left here that needs a blanket wipe.
     msg_start()
+    check_for_update()
+    console.print()
 
     while True:
         show_menu()

@@ -38,6 +38,8 @@ You'll get an interactive menu:
 The app is available in **English** (default), **Italian**, and **Spanish**. Change it anytime from `Settings -> Language` — the switch applies immediately and is remembered for future runs.
 
 ## Auto Update
+On every launch, the app checks the repo's `main` branch and tells you right away whether you're up to date or a new version is available.
+
 Keep your script up to date with the latest features:
 - **Windows**: double-click `SCDownloader_update.bat`.
 - **macOS/Linux**: double-click `SCDownloader_update.command` (or run `./SCDownloader_update.command` from Terminal).
