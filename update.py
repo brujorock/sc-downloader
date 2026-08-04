@@ -29,7 +29,7 @@ def move_content(source, destination):
             # Otherwise, move the file, replacing if it already exists
             shutil.move(source_path, destination_path)
 
-def keep_specific_items(directory, keep_folder, keep_file):
+def keep_specific_items(directory, keep_folders, keep_files):
     try:
         if not os.path.exists(directory) or not os.path.isdir(directory):
             raise ValueError(t("upload.invalid_dir", dir=directory))
@@ -38,10 +38,10 @@ def keep_specific_items(directory, keep_folder, keep_file):
         for item in os.listdir(directory):
             item_path = os.path.join(directory, item)
 
-            # Check if the item is the specified folder or file
-            if os.path.isdir(item_path) and item != keep_folder:
+            # Check if the item is one of the specified folders or files
+            if os.path.isdir(item_path) and item not in keep_folders:
                 shutil.rmtree(item_path)
-            elif os.path.isfile(item_path) and item != keep_file:
+            elif os.path.isfile(item_path) and item not in keep_files:
                 os.remove(item_path)
 
     except PermissionError as pe:
@@ -97,8 +97,10 @@ def main_upload():
     repository_owner = 'brujorock'
     repository_name = 'sc-downloader'
 
-    # Remove all old file
-    keep_specific_items(".", "downloads", "upload.py")
+    # Remove all old files, but keep the user's environment, git history,
+    # downloaded content and local settings (none of these come back from
+    # the repo zip since they're gitignored / not tracked).
+    keep_specific_items(".", [".venv", ".git", "downloads"], ["data.json", "history.json"])
 
     download_and_extract_latest_commit(repository_owner, repository_name)
 

@@ -38,10 +38,15 @@ You'll get an interactive menu:
 The app is available in **English** (default), **Italian**, and **Spanish**. Change it anytime from `Settings -> Language` — the switch applies immediately and is remembered for future runs.
 
 ## Auto Update
-Keep your script up to date with the latest features by running:
+Keep your script up to date with the latest features:
+- **Windows**: double-click `SCDownloader_update.bat`.
+- **macOS/Linux**: double-click `SCDownloader_update.command` (or run `./SCDownloader_update.command` from Terminal).
+
+Or run it manually with the venv activated:
 ```python
 python update.py
 ```
+Your virtual environment, git history, downloads, and saved settings (domain, language, history) are preserved — only the app's own source files are refreshed.
 
 ## Features
 - Download Single Film: Easily download individual movies with a simple command.
