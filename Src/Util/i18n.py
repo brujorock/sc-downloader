@@ -22,6 +22,8 @@ TRANSLATIONS = {
         # app / general
         "app.python_version_error": "Please install a Python version > 3.11",
         "app.press_any_key": "Press any key to return to the main menu...",
+        "app.welcome": "Welcome to",
+        "app.welcome_prompt": "Enter the source URL to continue",
         "error.generic": "Error: {status}",
 
         # menu
@@ -206,6 +208,8 @@ TRANSLATIONS = {
     "it": {
         "app.python_version_error": "Installa una versione di Python > 3.11",
         "app.press_any_key": "Premi un tasto qualsiasi per tornare al menu principale...",
+        "app.welcome": "Benvenuto su",
+        "app.welcome_prompt": "Inserisci l'url sorgente per procedere",
         "error.generic": "Errore: {status}",
 
         "menu.title": "Menu:",
@@ -376,6 +380,8 @@ TRANSLATIONS = {
     "es": {
         "app.python_version_error": "Instala una version de Python > 3.11",
         "app.press_any_key": "Pulsa una tecla para volver al menu principal...",
+        "app.welcome": "Bienvenido a",
+        "app.welcome_prompt": "Introduce la URL de origen para continuar",
         "error.generic": "Error: {status}",
 
         "menu.title": "Menu:",

@@ -28,8 +28,10 @@ Or run it manually with the venv activated:
 ```python
 python run.py
 ```
+On first launch (no source domain saved yet), the app welcomes you and asks for it right away — no need to dig into Settings first.
+
 You'll get an interactive menu:
-1. **Download a movie or TV series** — search and download (requires a domain to be configured first, see option 2).
+1. **Download a movie or TV series** — search and download.
 2. **Settings** — configure the streaming domain and the interface language.
 3. **Search & download history** — browse your most recent searches and completed downloads.
 4. **About SCDownloader** — info about the project.

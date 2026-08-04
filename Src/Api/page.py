@@ -42,6 +42,41 @@ def ask_new_domain():
         else:
             console.print(f"[error]{t('domain.invalid')}[/]")
 
+def is_domain_configured():
+    try:
+        with open('data.json', 'r') as file:
+            req_repo = json.load(file)
+    except FileNotFoundError:
+        return False
+    return bool(req_repo.get('domain'))
+
+def first_run_setup():
+    """No domain saved yet (fresh install, or a cleared one): welcome the
+    user and ask for the source domain right away instead of leaving them
+    to find Settings on their own."""
+
+    if is_domain_configured():
+        return
+
+    console.print(f"[title]{t('app.welcome')} SCDownloader by BarbieGirl♥[/]")
+    console.print(f"[info]{t('app.welcome_prompt')}[/]")
+    console.print()
+
+    domain, _ = ask_new_domain()
+
+    try:
+        with open('data.json', 'r') as file:
+            req_repo = json.load(file)
+    except FileNotFoundError:
+        req_repo = {}
+
+    req_repo['domain'] = domain
+    with open('data.json', 'w') as file:
+        json.dump(req_repo, file)
+
+    console.print(f"[success]{t('domain.saved')}[/] [value]{domain}[/]")
+    console.print()
+
 def load_domain():
     """Read-only: load the saved domain and verify it still works. Does not prompt or save. Used by the download flow."""
 

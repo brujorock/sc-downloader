@@ -274,6 +274,11 @@ def main():
     check_for_update()
     console.print()
 
+    if not Page.is_domain_configured():
+        check_ffmpeg()
+        console.print()
+        Page.first_run_setup()
+
     while True:
         show_menu()
         choice = msg.ask(f"[prompt]{t('menu.choose_option')}[/]").strip()
