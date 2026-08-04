@@ -3,8 +3,6 @@
 ## Overview
 This repository provides a simple script designed to facilitate the downloading of films and series from a popular streaming community platform. The script allows users to download individual films, entire series, or specific episodes, providing a seamless experience for content consumers.
 
-This is a fork of the original [Streaming Community downloader](https://github.com/Ghost6446/StreamingCommunity_api), rewritten with an interactive menu, multi-language support, and a Barbie-themed CLI.
-
 ## Requirements
 Works on **Windows**, **macOS** (Intel and Apple Silicon), and **Linux**. Make sure you have the following prerequisites installed on your system:
 
