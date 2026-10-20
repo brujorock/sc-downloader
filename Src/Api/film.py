@@ -102,7 +102,9 @@ def select_video_audio(m3u8_playlist):
     return video_url, audio_url
 
 def get_m3u8_key(url_embed):
-    req = requests.get('https://vixcloud.co/storage/enc.key', headers={'referer': url_embed, 'user-agent': get_headers()})
+    parsed = urlparse(url_embed)
+    key_url = f'{parsed.scheme}://{parsed.netloc}/storage/enc.key'
+    req = requests.get(key_url, headers={'referer': url_embed, 'user-agent': get_headers()})
 
     if req.ok:
         return "".join(["{:02x}".format(c) for c in req.content])
