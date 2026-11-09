@@ -55,7 +55,7 @@ def get_iframe(tv_id, ep_id, domain, token):
     if req.ok:
         try:
             url_embed = BeautifulSoup(req.text, "lxml").find("iframe").get("src")
-            req_embed = requests.get(url_embed, headers = {"User-agent": get_headers()}).text
+            req_embed = requests.get(url_embed, headers = {"user-agent": get_headers(), "referer": f"https://{domain}/"}).text
             embed_script = BeautifulSoup(req_embed, "lxml").find("body").find("script").text
             return embed_script, url_embed
         except:
